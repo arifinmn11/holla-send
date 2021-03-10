@@ -10,5 +10,4 @@ interface AuthApi {
     suspend fun postAuth(
         @Body requestAuth: RequestAuth
     ): ResponseAuth
-
 }

@@ -14,11 +14,12 @@ import com.enigma.application.R
 import com.enigma.application.data.model.auth.RequestAuth
 import com.enigma.application.data.repository.AuthRepositoryImpl
 import com.enigma.application.databinding.FragmentSplashBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SplashFragment : Fragment() {
     lateinit var binding: FragmentSplashBinding
     lateinit var viewModel: SplashViewModel
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,15 +35,15 @@ class SplashFragment : Fragment() {
         return binding.root
     }
 
-
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                val getRepo = AuthRepositoryImpl()
-                return SplashViewModel(getRepo) as T
-            }
-
-        }).get(SplashViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
+//        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+//            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+//                val getRepo = AuthRepositoryImpl()
+//                return SplashViewModel(getRepo) as T
+//            }
+//
+//        }).get(SplashViewModel::class.java)
     }
 
     fun subscribe() {

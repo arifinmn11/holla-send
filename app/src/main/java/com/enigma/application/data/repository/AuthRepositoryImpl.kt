@@ -1,10 +1,11 @@
 package com.enigma.application.data.repository
 
-import com.enigma.application.data.api.RetrofitInstance
+import com.enigma.application.data.api.AuthApi
 import com.enigma.application.data.model.auth.RequestAuth
 import com.enigma.application.data.model.auth.ResponseAuth
+import javax.inject.Inject
 
-class AuthRepositoryImpl : AuthRepository {
+class AuthRepositoryImpl @Inject constructor(val authApi: AuthApi) : AuthRepository {
     override suspend fun postAuth(requestAuth: RequestAuth): ResponseAuth =
-        RetrofitInstance.authApi.postAuth(requestAuth)
+        authApi.postAuth(requestAuth)
 }
