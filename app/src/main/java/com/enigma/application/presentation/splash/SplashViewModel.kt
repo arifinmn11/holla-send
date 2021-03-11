@@ -14,7 +14,7 @@ import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
 @HiltViewModel
-class SplashViewModel @Inject constructor(@PostAuth private val repository: AuthRepository) : ViewModel() {
+class SplashViewModel @Inject constructor(@PostAuth val repository: AuthRepository) : ViewModel() {
 
     fun postAuth() = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
         withTimeout(5000) {
@@ -23,15 +23,16 @@ class SplashViewModel @Inject constructor(@PostAuth private val repository: Auth
                 val req = RequestAuth(email = "email@gmail.com", password = "admin1234")
                 response = repository.postAuth(req)
             } catch (e: Exception) {
+
+                Log.d("RESPONSE", "$e")
                 response =
                     ResponseAuth(
-                        status = 400,
+                        code = 400,
                         message = "Error, try again",
                         data = null
                     )
                 emit(response)
             } finally {
-                Log.d("RESPONSE", "$response")
                 emit(response)
             }
 

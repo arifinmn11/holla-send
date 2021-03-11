@@ -6,7 +6,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface AuthApi {
-    @POST("/auth/user")
+    @POST("authenticate")
     suspend fun postAuth(
         @Body requestAuth: RequestAuth
     ): ResponseAuth

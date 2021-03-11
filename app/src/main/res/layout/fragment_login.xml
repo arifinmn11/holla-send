@@ -45,14 +45,6 @@
                 android:layout_marginTop="30dp"
                 android:src="@drawable/ic_undraw_authentication_fsn5" />
 
-            <!--            <TextView-->
-            <!--                style="@style/TextView.PoppinsNormal16spBlack"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginTop="20dp"-->
-            <!--                android:text="Email Address"-->
-            <!--                android:textSize="16dp" />-->
-
             <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/etEmailLayout"
                 android:layout_width="match_parent"
@@ -73,15 +65,6 @@
                     android:hint="Email"
                     android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <!--            <TextView-->
-            <!--                style="@style/TextView.PoppinsNormal16spBlack"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginTop="20dp"-->
-            <!--                android:text="Password"-->
-            <!--                android:textSize="16dp" />-->
-
 
             <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/etPasswordLayout"

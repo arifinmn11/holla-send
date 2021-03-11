@@ -13,13 +13,12 @@ data class ResponseAuth(
     @field:SerializedName("message")
     val message: String? = null,
 
-    @field:SerializedName("status")
-    val status: Int
+    @field:SerializedName("code")
+    val code: Int
 ) : Parcelable
 
 @Parcelize
 data class Data(
-
     @field:SerializedName("token")
     val token: String? = null
 ) : Parcelable

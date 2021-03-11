@@ -1,25 +1,22 @@
 package com.enigma.application.presentation.splash
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.enigma.application.R
-import com.enigma.application.data.model.auth.RequestAuth
-import com.enigma.application.data.repository.AuthRepositoryImpl
 import com.enigma.application.databinding.FragmentSplashBinding
+import com.enigma.application.presentation.activity.ActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SplashFragment : Fragment() {
     lateinit var binding: FragmentSplashBinding
     lateinit var viewModel: SplashViewModel
+    lateinit var activityViewModel: ActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,19 +34,17 @@ class SplashFragment : Fragment() {
 
     private fun initViewModel() {
         viewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
-//        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
-//            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-//                val getRepo = AuthRepositoryImpl()
-//                return SplashViewModel(getRepo) as T
-//            }
-//
-//        }).get(SplashViewModel::class.java)
+        activityViewModel = ViewModelProvider(requireActivity()).get(ActivityViewModel::class.java)
     }
 
     fun subscribe() {
         viewModel.postAuth().observe(this) {
-            when (it?.status) {
-                200 -> findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+            activityViewModel.setBottomVisibility(false)
+            when (it?.code) {
+                200 -> {
+                    activityViewModel.setBottomVisibility(true)
+                    findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+                }
                 401 -> findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
                 400 -> findNavController().navigate(R.id.action_splashFragment_to_welcomeFragment)
                 else -> findNavController().navigate(R.id.action_splashFragment_to_welcomeFragment)
