@@ -1,5 +1,6 @@
 package com.enigma.application.presentation.register
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -112,7 +113,7 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
                             when (it?.code) {
                                 200 -> {
                                     loadingDialog.hide()
-                                    findNavController().popBackStack()
+                                    dialog()
                                 }
                                 500 -> {
                                     loadingDialog.hide()
@@ -169,16 +170,27 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     companion object {
-
         fun newInstance() = RegisterFragment()
     }
 
+
+    // alert dialog
+    private fun dialog() {
+        AlertDialog.Builder(requireContext())
+            // Title
+            .setTitle("Account has been created!!")
+            .setNeutralButton("Ya", DialogInterface.OnClickListener { dialogInterface, i ->
+                findNavController().navigate(R.id.action_global_loginFragment)
+            })
+            .show()
+    }
+
+
+    // Spinner
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         identity = parent?.getItemAtPosition(position).toString()
-
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
-
     }
 }

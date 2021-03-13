@@ -122,4 +122,8 @@
         android:id="@+id/action_global_profileFragment"
         app:destination="@id/profileFragment"
         app:launchSingleTop="true" />
+    <action
+        android:id="@+id/action_global_loginFragment"
+        app:destination="@id/loginFragment"
+        app:popUpToInclusive="true" />
 </navigation>
