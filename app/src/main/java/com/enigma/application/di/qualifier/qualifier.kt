@@ -10,3 +10,7 @@ annotation class PostAuth
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class ValidationAuth
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class GetProfile

@@ -29,6 +29,9 @@
             app:destination="@id/homeFragment"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_splashFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -37,7 +40,19 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:launchSingleTop="true"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_forgetPasswordFragment"
+            app:destination="@id/forgetPasswordFragment" />
     </fragment>
     <fragment
         android:id="@+id/welcomeFragment"
@@ -61,16 +76,12 @@
         android:name="com.enigma.application.presentation.history.HistoryFragment"
         android:label="fragment_history"
         tools:layout="@layout/fragment_history" />
-    <fragment
-        android:id="@+id/mapFragment"
-        android:name="com.enigma.application.presentation.map.MapFragment"
-        android:label="fragment_map"
-        tools:layout="@layout/fragment_map" />
     <action
         android:id="@+id/action_global_homeFragment"
         app:destination="@id/homeFragment"
         app:enterAnim="@android:anim/slide_in_left"
         app:exitAnim="@android:anim/slide_out_right"
+        app:launchSingleTop="true"
         app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/taskFragment"
@@ -82,17 +93,43 @@
         app:destination="@id/historyFragment"
         app:enterAnim="@android:anim/slide_in_left"
         app:exitAnim="@android:anim/slide_out_right"
-        app:popUpToInclusive="true" />
-    <action
-        android:id="@+id/action_global_mapFragment"
-        app:destination="@id/mapFragment"
-        app:enterAnim="@android:anim/slide_in_left"
-        app:exitAnim="@android:anim/slide_out_right"
+        app:launchSingleTop="true"
         app:popUpToInclusive="true" />
     <action
         android:id="@+id/action_global_taskFragment"
         app:destination="@id/taskFragment"
         app:enterAnim="@android:anim/slide_in_left"
         app:exitAnim="@android:anim/slide_out_right"
+        app:launchSingleTop="true"
         app:popUpToInclusive="true" />
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.enigma.application.presentation.register.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment_to_biodataFragment"
+            app:destination="@id/biodataFragment"
+            app:launchSingleTop="true"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/forgetPasswordFragment"
+        android:name="com.enigma.application.presentation.forget.ForgetPasswordFragment"
+        android:label="fragment_forget_password"
+        tools:layout="@layout/fragment_forget_password" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.enigma.application.presentation.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <action
+        android:id="@+id/action_global_profileFragment"
+        app:destination="@id/profileFragment"
+        app:launchSingleTop="true" />
+    <fragment
+        android:id="@+id/biodataFragment"
+        android:name="com.enigma.application.presentation.register.BiodataFragment"
+        android:label="fragment_biodata"
+        tools:layout="@layout/fragment_biodata" />
 </navigation>

@@ -1,6 +1,8 @@
 package com.enigma.application.presentation.splash
 
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,16 +40,17 @@ class SplashFragment : Fragment() {
     }
 
     fun subscribe() {
-        viewModel.postAuth().observe(this) {
+        viewModel.checkToken().observe(this) {
+            Log.d("MASUK", "$it")
             activityViewModel.setBottomVisibility(false)
             when (it?.code) {
                 200 -> {
                     activityViewModel.setBottomVisibility(true)
-                    findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+                    findNavController().navigate(R.id.action_global_homeFragment)
                 }
                 401 -> findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
-                400 -> findNavController().navigate(R.id.action_splashFragment_to_welcomeFragment)
-                else -> findNavController().navigate(R.id.action_splashFragment_to_welcomeFragment)
+                400 -> findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+                else -> findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
             }
         }
     }

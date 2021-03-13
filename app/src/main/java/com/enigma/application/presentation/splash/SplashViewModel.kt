@@ -6,7 +6,9 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.enigma.application.data.model.auth.RequestAuth
 import com.enigma.application.data.model.auth.ResponseAuth
+import com.enigma.application.data.model.profile.ResponseProfile
 import com.enigma.application.data.repository.AuthRepository
+import com.enigma.application.di.qualifier.GetProfile
 import com.enigma.application.di.qualifier.PostAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,24 +16,22 @@ import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
 @HiltViewModel
-class SplashViewModel @Inject constructor(@PostAuth val repository: AuthRepository) : ViewModel() {
+class SplashViewModel @Inject constructor(@GetProfile val repository: AuthRepository) :
+    ViewModel() {
 
-    fun postAuth() = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+    fun checkToken() = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
         withTimeout(5000) {
-            var response: ResponseAuth? = null
+            var response: ResponseProfile? = null
             try {
-                val req = RequestAuth(email = "email@gmail.com", password = "admin1234")
-                response = repository.postAuth(req)
+                response = repository.getMe()
             } catch (e: Exception) {
-
                 Log.d("RESPONSE", "$e")
                 response =
-                    ResponseAuth(
+                    ResponseProfile(
                         code = 400,
                         message = "Error, try again",
                         data = null
                     )
-                emit(response)
             } finally {
                 emit(response)
             }

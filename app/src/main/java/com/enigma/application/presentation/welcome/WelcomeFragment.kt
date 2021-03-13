@@ -37,7 +37,7 @@ class WelcomeFragment : Fragment() {
     ): View? {
         binding.apply {
             startedButton.setOnClickListener {
-//                activityViewModel.setBottomVisibility(true)
+                activityViewModel.setBottomVisibility(true)
                 findNavController().navigate(R.id.action_welcomeFragment_to_loginFragment)
             }
 

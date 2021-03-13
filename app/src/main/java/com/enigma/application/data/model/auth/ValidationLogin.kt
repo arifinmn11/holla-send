@@ -1,4 +1,4 @@
-package com.enigma.application.data.model.auth.validation
+package com.enigma.application.data.model.auth
 
 import com.google.gson.annotations.SerializedName
 
@@ -7,5 +7,5 @@ data class ValidationLogin(
     val email: Boolean,
 
     @field:SerializedName("password")
-    val password: Boolean
+    val username: Boolean
 )

@@ -4,10 +4,9 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.enigma.application.data.model.auth.RequestAuth
 import com.enigma.application.data.model.auth.ResponseAuth
-import com.enigma.application.data.model.auth.validation.ValidationLogin
+import com.enigma.application.data.model.auth.ValidationLogin
 import com.enigma.application.data.repository.AuthRepository
 import com.enigma.application.di.qualifier.PostAuth
-import com.enigma.application.utils.Constans
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withTimeout
@@ -28,24 +27,24 @@ class LoginViewModel @Inject constructor(@PostAuth val repository: AuthRepositor
                 try {
                     response = repository.postAuth(requestAuth)
                 } catch (e: Exception) {
+                    Log.d("ERROR", "$e")
 
                     Log.d("RESPONSE", "$e")
                     response =
                         ResponseAuth(
                             code = 400,
-                            message = "Error, try again",
-                            data = null
+                            data = null,
+                            message = "Email or Password invalid!",
                         )
                     emit(response)
                 } finally {
                     emit(response)
                 }
-
             }
         }
 
     fun validation(requestAuth: RequestAuth) {
-        if (!requestAuth.email.matches(Constans.VALIDATION_EMAIL.toRegex())) {
+        if (requestAuth.password.length <= 6) {
             _validation.postValue(ValidationLogin(true, false))
         } else if (requestAuth.password.length <= 8) {
             _validation.postValue(ValidationLogin(false, true))

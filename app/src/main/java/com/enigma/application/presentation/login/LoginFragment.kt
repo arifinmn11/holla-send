@@ -1,5 +1,6 @@
 package com.enigma.application.presentation.login
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,26 +9,33 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.enigma.application.R
 import com.enigma.application.data.model.auth.RequestAuth
 import com.enigma.application.databinding.FragmentLoginBinding
 import com.enigma.application.presentation.activity.ActivityViewModel
-import com.enigma.application.presentation.splash.SplashViewModel
+import com.enigma.application.utils.Constans
+import com.enigma.application.utils.component.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_login.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
     lateinit var binding: FragmentLoginBinding
     lateinit var viewModel: LoginViewModel
     lateinit var activityModel: ActivityViewModel
+    lateinit var loadingDialog: AlertDialog
+
+    @Inject
+    lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
         subscribe()
+        loadingDialog = LoadingDialog.build(requireContext())
         binding = FragmentLoginBinding.inflate(layoutInflater)
     }
 
@@ -39,11 +47,14 @@ class LoginFragment : Fragment() {
         binding.apply {
             signInButton.setOnClickListener {
 
-                val email = etEmail.text.toString()
+                val username = etUsername.text.toString()
                 val password = etPassword.text.toString()
 
-                viewModel.validation(RequestAuth(email = email, password = password))
+                viewModel.validation(RequestAuth(username = username, password = password))
+            }
 
+            createAccButton.setOnClickListener {
+                findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
             }
         }
 
@@ -67,45 +78,59 @@ class LoginFragment : Fragment() {
     private fun subscribe() {
         viewModel.getValidation().observe(this) {
             Log.d("STATUS", "$it")
+
             binding.apply {
                 if (!it.email)
-                    etEmail.background = resources.getDrawable(R.drawable.radius_edit_text)
+                    etUsername.background = resources.getDrawable(R.drawable.radius_edit_text)
                 else
-                    etEmail.background = resources.getDrawable(R.drawable.error_edit_text)
+                    etUsername.background = resources.getDrawable(R.drawable.error_edit_text)
 
-                if (!it.password)
+                if (!it.username)
                     etPassword.background = resources.getDrawable(R.drawable.radius_edit_text)
                 else
                     etPassword.background = resources.getDrawable(R.drawable.error_edit_text)
 
-                if (!it.email && !it.password) {
-                    val email = etEmail.text.toString()
+                if (!it.email && !it.username) {
+                    loadingDialog.show()
+
+                    val username = etUsername.text.toString()
                     val password = etPassword.text.toString()
 
-                    viewModel.postAuth(RequestAuth(email = email, password = password))
+                    viewModel.postAuth(RequestAuth(username = username, password = password))
                         .observe(requireActivity()) {
+                            loadingDialog.show()
+
                             when (it?.code) {
                                 200 -> {
-                                    activityModel.setBottomVisibility(true)
-                                    findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                                    loadingDialog.hide()
+                                    sharedPref.edit().putString(Constans.TOKEN, "${it.data?.token}")
+                                        .apply()
+                                    findNavController().navigate(R.id.action_global_homeFragment)
                                 }
                                 401 -> {
+                                    loadingDialog.hide()
                                     Toast.makeText(
                                         requireContext(),
                                         "Password or Email invalid!",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
-                                400 -> Toast.makeText(
-                                    requireContext(),
-                                    "Password or Email invalid!",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                else -> Toast.makeText(
-                                    requireContext(),
-                                    "Password or Email invalid!",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                400 -> {
+                                    loadingDialog.hide()
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Password or Email invalid!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                                else -> {
+                                    loadingDialog.hide()
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Password or Email invalid!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
                         }
                 }

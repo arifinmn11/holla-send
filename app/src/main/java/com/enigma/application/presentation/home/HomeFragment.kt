@@ -6,17 +6,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.enigma.application.R
 import com.enigma.application.databinding.FragmentHomeBinding
+import com.enigma.application.presentation.activity.ActivityViewModel
+import com.enigma.application.presentation.splash.SplashViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_home.*
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
+    lateinit var viewModel: HomeViewModel
+    lateinit var activityViewModel: ActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        initViewModel()
+        subscribe()
         binding = FragmentHomeBinding.inflate(layoutInflater)
     }
 
@@ -34,7 +43,28 @@ class HomeFragment : Fragment() {
             }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
+        binding.apply {
+            activityViewModel.setBottomVisibility(true)
+
+            refreshHome.setOnRefreshListener {
+                val number = numberClock.text.toString().toInt() + 1
+                numberClock.text = number.toString()
+                refreshHome.isRefreshing = false
+            }
+
+            buttonClick.setOnClickListener {
+            }
+        }
         return binding.root
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        activityViewModel = ViewModelProvider(requireActivity()).get(ActivityViewModel::class.java)
+    }
+
+    fun subscribe() {
+
     }
 
     companion object {
