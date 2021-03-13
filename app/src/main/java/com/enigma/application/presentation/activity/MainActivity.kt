@@ -82,8 +82,6 @@ class MainActivity : AppCompatActivity() {
 
     fun subscribe() {
         viewModel.bottomVisibility.observe(this) {
-            Log.d("SHOW STATUS BAR", "$it")
-            Log.d("SHOW STATUS BAR", "MASUK")
             val maxHeight = binding.layoutActivity.height
             binding.navHostFragment.minimumHeight = maxHeight
             binding.bottomNavigation.visibility = it

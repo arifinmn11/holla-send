@@ -106,13 +106,7 @@
         android:id="@+id/registerFragment"
         android:name="com.enigma.application.presentation.register.RegisterFragment"
         android:label="fragment_register"
-        tools:layout="@layout/fragment_register" >
-        <action
-            android:id="@+id/action_registerFragment_to_biodataFragment"
-            app:destination="@id/biodataFragment"
-            app:launchSingleTop="true"
-            app:popUpToInclusive="true" />
-    </fragment>
+        tools:layout="@layout/fragment_register" />
     <fragment
         android:id="@+id/forgetPasswordFragment"
         android:name="com.enigma.application.presentation.forget.ForgetPasswordFragment"
@@ -127,9 +121,4 @@
         android:id="@+id/action_global_profileFragment"
         app:destination="@id/profileFragment"
         app:launchSingleTop="true" />
-    <fragment
-        android:id="@+id/biodataFragment"
-        android:name="com.enigma.application.presentation.register.BiodataFragment"
-        android:label="fragment_biodata"
-        tools:layout="@layout/fragment_biodata" />
 </navigation>

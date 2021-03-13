@@ -18,10 +18,10 @@
             android:paddingRight="40dp">
 
             <com.google.android.material.textview.MaterialTextView
-                style="@style/TextView.PoppinsNormal16spBlack"
+                style="@style/TextView.PoppinsNormal32spBlack"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="15dp"
                 android:text="Sign up"
                 android:textAlignment="center" />
 
@@ -109,6 +109,110 @@
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/etFirstNameLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="62dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    app:hintEnabled="true"
+                    app:hintTextColor="@color/hintColor"
+                    app:passwordToggleEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etFirstName"
+                        style="@style/EditText.PoppinsNormal14spGrey"
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/radius_edit_text"
+                        android:contentDescription=""
+                        android:hint="First Name"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/etLastNameLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="62dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    app:hintEnabled="true"
+                    app:hintTextColor="@color/hintColor"
+                    app:passwordToggleEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etLastName"
+                        style="@style/EditText.PoppinsNormal14spGrey"
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:background="@drawable/radius_edit_text"
+                        android:contentDescription=""
+                        android:hint="Last Name"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinnerIdentity"
+                android:layout_width="match_parent"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/radius_edit_text"
+                android:layout_height="40dp" />
+
+            <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/etIdentificationNumberLayout"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginTop="10dp"
+                android:gravity="bottom"
+                app:hintEnabled="true"
+                app:hintTextColor="@color/hintColor"
+                app:passwordToggleEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etIdentificationNumber"
+                    style="@style/EditText.PoppinsNormal14spGrey"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:background="@drawable/radius_edit_text"
+                    android:contentDescription=""
+                    android:hint="No Identification"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/etAddressLayout"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginTop="10dp"
+                android:gravity="bottom"
+                app:hintEnabled="true"
+                app:hintTextColor="@color/hintColor"
+                app:passwordToggleEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etAddress"
+                    style="@style/EditText.PoppinsNormal14spGrey"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:background="@drawable/radius_edit_text"
+                    android:contentDescription=""
+                    android:hint="Address"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <Button
                 android:id="@+id/sign_up_button"
                 style="@style/TextView.PoppinsNormal16spBlack"
@@ -122,11 +226,11 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/login_text"
-                style="@style/TextView.PoppinsNormal16spGrey"
+                style="@style/TextView.PoppinsNormal14spGrey"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Alreary a member? Login"
+                android:text="Already a member? Login"
                 android:textAlignment="center" />
         </LinearLayout>
     </ScrollView>

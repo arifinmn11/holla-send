@@ -22,7 +22,12 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
         email: String,
         username: String,
         password: String,
-        confirmPassword: String
+        confirmPassword: String,
+        firstName: String,
+        lastName: String,
+        identification: String,
+        noIdentification: String,
+        address: String
     ) {
         var validation = ResponseValidation("", "")
         if (!email.validEmail()) {
@@ -34,9 +39,24 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
         } else if (password.length <= 6) {
             validation.message = "Password is not Valid min 6 character"
             validation.status = Constans.VALIDATION_PASSWORD
-        } else if (password == confirmPassword) {
+        } else if (password != confirmPassword) {
             validation.message = "Confirmation Password is not valid!"
             validation.status = Constans.VALIDATION_CONFIRM_PASSWORD
+        } else if (firstName.isEmpty()) {
+            validation.message = "First name is not valid!"
+            validation.status = Constans.VALIDATION_FIRSTNAME
+        } else if (lastName.isEmpty()) {
+            validation.message = "Last name is not valid!"
+            validation.status = Constans.VALIDATION_LASTNAME
+        } else if (identification.isEmpty()) {
+            validation.message = "Identification is not valid!"
+            validation.status = Constans.VALIDATION_IDENTIFICATION
+        } else if (noIdentification.isEmpty()) {
+            validation.message = "No Identification name is not valid!"
+            validation.status = Constans.VALIDATION_NO_IDENTIFICATION
+        } else if (address.isEmpty()) {
+            validation.message = "Address is not valid!"
+            validation.status = Constans.VALIDATION_ADDRESS
         } else {
             validation.message = ""
             validation.status = Constans.VALIDATION_SUCCESS
