@@ -10,6 +10,7 @@ class AuthRepositoryImpl @Inject constructor(val authApi: AuthApi) : AuthReposit
     override suspend fun postAuth(requestAuth: RequestAuth): ResponseAuth =
         authApi.postAuth(requestAuth)
 
-    override suspend fun getMe(): ResponseProfile = authApi.getProfile()
+    override suspend fun getMe(): ResponseProfile =
+        authApi.getProfile()
 
 }

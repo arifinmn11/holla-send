@@ -27,9 +27,6 @@ class LoginViewModel @Inject constructor(@PostAuth val repository: AuthRepositor
                 try {
                     response = repository.postAuth(requestAuth)
                 } catch (e: Exception) {
-                    Log.d("ERROR", "$e")
-
-                    Log.d("RESPONSE", "$e")
                     response =
                         ResponseAuth(
                             code = 400,
@@ -46,7 +43,7 @@ class LoginViewModel @Inject constructor(@PostAuth val repository: AuthRepositor
     fun validation(requestAuth: RequestAuth) {
         if (requestAuth.password.length <= 6) {
             _validation.postValue(ValidationLogin(true, false))
-        } else if (requestAuth.password.length <= 8) {
+        } else if (requestAuth.password.length <= 6) {
             _validation.postValue(ValidationLogin(false, true))
         } else {
             _validation.postValue(ValidationLogin(false, false))
