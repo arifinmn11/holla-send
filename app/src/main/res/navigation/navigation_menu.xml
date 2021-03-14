@@ -23,6 +23,7 @@
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"
             app:launchSingleTop="false"
+            app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_splashFragment_to_homeFragment"
@@ -48,7 +49,7 @@
             app:destination="@id/registerFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"
-            app:launchSingleTop="true"
+            app:launchSingleTop="false"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
         <action

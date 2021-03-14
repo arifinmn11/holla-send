@@ -48,8 +48,7 @@ class SplashFragment : Fragment() {
                     activityViewModel.setBottomVisibility(true)
                     findNavController().navigate(R.id.action_global_homeFragment)
                 }
-                401 -> findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
-                400 -> findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+                404 -> findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
                 else -> findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
             }
         }

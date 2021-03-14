@@ -166,9 +166,10 @@
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/spinnerIdentity"
                 android:layout_width="match_parent"
+                android:layout_height="40dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/radius_edit_text"
-                android:layout_height="40dp" />
+                android:background="@drawable/radius_spinner"
+                android:isScrollContainer="true" />
 
             <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/etIdentificationNumberLayout"

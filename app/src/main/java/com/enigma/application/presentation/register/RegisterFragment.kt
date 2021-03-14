@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -44,8 +45,22 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         loadingDialog = LoadingDialog.build(requireContext())
         binding = FragmentRegisterBinding.inflate(layoutInflater)
+
+
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true /* enabled by default */) {
+                override fun handleOnBackPressed() {
+                    // Handle the back button event
+                    findNavController().navigate(R.id.action_global_loginFragment)
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
         binding.apply {
 
+            loginText.setOnClickListener {
+                findNavController().navigate(R.id.action_global_loginFragment)
+            }
 
             signUpButton.setOnClickListener {
                 val email = etEmail.text.toString()
@@ -121,7 +136,8 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
                                         requireContext(),
                                         "Password or Usernameis Invalid!",
                                         Toast.LENGTH_SHORT
-                                    ).show()
+                                    )
+                                        .show()
 
                                 }
                                 else -> {

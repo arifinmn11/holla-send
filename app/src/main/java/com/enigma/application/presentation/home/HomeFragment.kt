@@ -47,12 +47,7 @@ class HomeFragment : Fragment() {
             activityViewModel.setBottomVisibility(true)
 
             refreshHome.setOnRefreshListener {
-                val number = numberClock.text.toString().toInt() + 1
-                numberClock.text = number.toString()
                 refreshHome.isRefreshing = false
-            }
-
-            buttonClick.setOnClickListener {
             }
         }
         return binding.root
