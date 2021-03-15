@@ -30,82 +30,13 @@ data class Destination(
     val name: String? = null,
 
     @field:SerializedName("lon")
-    val lon: Int? = null,
+    val lon: Double? = null,
 
     @field:SerializedName("id")
     val id: String? = null,
 
     @field:SerializedName("lat")
-    val lat: Int? = null
-) : Parcelable
-
-@Parcelize
-data class DataItem(
-
-    @field:SerializedName("notes")
-    val notes: String? = null,
-
-    @field:SerializedName("courier")
-    val courier: Courier? = null,
-
-    @field:SerializedName("destination")
-    val destination: Destination? = null,
-
-    @field:SerializedName("pickUpTime")
-    val pickUpTime: String? = null,
-
-    @field:SerializedName("requestBy")
-    val requestBy: RequestBy? = null,
-
-    @field:SerializedName("id")
-    val id: String? = null,
-
-    @field:SerializedName("deliveredTime")
-    val deliveredTime: String? = null,
-
-    @field:SerializedName("priority")
-    val priority: String? = null,
-
-    @field:SerializedName("status")
-    val status: String? = null
-) : Parcelable
-
-@Parcelize
-data class RequestBy(
-
-    @field:SerializedName("role")
-    val role: String? = null,
-
-    @field:SerializedName("id")
-    val id: String? = null,
-
-    @field:SerializedName("userDetails")
-    val userDetails: UserDetails? = null,
-
-    @field:SerializedName("email")
-    val email: String? = null,
-
-    @field:SerializedName("username")
-    val username: String? = null
-) : Parcelable
-
-@Parcelize
-data class Courier(
-
-    @field:SerializedName("role")
-    val role: String? = null,
-
-    @field:SerializedName("id")
-    val id: String? = null,
-
-    @field:SerializedName("userDetails")
-    val userDetails: UserDetails? = null,
-
-    @field:SerializedName("email")
-    val email: String? = null,
-
-    @field:SerializedName("username")
-    val username: String? = null
+    val lat: Double? = null
 ) : Parcelable
 
 @Parcelize
@@ -128,4 +59,54 @@ data class UserDetails(
 
     @field:SerializedName("id")
     val id: String? = null
+) : Parcelable
+
+@Parcelize
+data class RequestBy(
+
+    @field:SerializedName("role")
+    val role: String? = null,
+
+    @field:SerializedName("id")
+    val id: String? = null,
+
+    @field:SerializedName("userDetails")
+    val userDetails: UserDetails? = null,
+
+    @field:SerializedName("email")
+    val email: String? = null,
+
+    @field:SerializedName("username")
+    val username: String? = null
+) : Parcelable
+
+@Parcelize
+data class DataItem(
+
+    @field:SerializedName("notes")
+    val notes: String? = null,
+
+    @field:SerializedName("courier")
+    val courier: String? = null,
+
+    @field:SerializedName("destination")
+    val destination: Destination? = null,
+
+    @field:SerializedName("pickUpTime")
+    val pickUpTime: String? = null,
+
+    @field:SerializedName("requestBy")
+    val requestBy: RequestBy? = null,
+
+    @field:SerializedName("id")
+    val id: String? = null,
+
+    @field:SerializedName("deliveredTime")
+    val deliveredTime: String? = null,
+
+    @field:SerializedName("priority")
+    val priority: String? = null,
+
+    @field:SerializedName("status")
+    val status: String? = null
 ) : Parcelable

@@ -14,4 +14,5 @@
     <color name="textColor">#202020</color>
     <color name="errorColor">#D32F2F</color>
     <color name="selectedColor">#22bb33</color>
+    <color name="warningColor">#f39c12</color>
 </resources>

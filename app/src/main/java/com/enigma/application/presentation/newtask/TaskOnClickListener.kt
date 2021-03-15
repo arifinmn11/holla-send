@@ -1,6 +1,9 @@
 package com.enigma.application.presentation.newtask
 
+import android.view.View
+
 interface TaskOnClickListener {
-    fun onSelected(test: String)
-    fun onUnSelected(test: String)
+    fun onSelected(id: String)
+    fun onUnSelected(id: String)
+    fun onClick(id: Int)
 }

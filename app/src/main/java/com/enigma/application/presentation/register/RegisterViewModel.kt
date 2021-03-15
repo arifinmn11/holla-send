@@ -41,7 +41,6 @@ class RegisterViewModel @Inject constructor(@PostRegistration val repository: Re
                             data = null,
                             message = "Email or Password not available!",
                         )
-                    emit(response)
                 } finally {
                     emit(response)
                 }

@@ -5,9 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <tag
-        android:id="@+id/keyId"
-        android:value="" />
+    <TextView
+        android:id="@+id/id_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/selected_icon"
@@ -21,6 +24,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
@@ -29,59 +33,116 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+
         <LinearLayout
             android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/unselected_card"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent">
 
-
-            <TextView
-                android:id="@+id/tvReceiver"
-                style="@style/TextView.PoppinsNormal16spBlack"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:id="@+id/priority"
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="35dp"
-                android:text="KCP KANTOR" />
-
-            <TextView
-                android:id="@+id/tvAddress"
-                style="@style/TextView.PoppinsNormal12spGrey"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:text="Jalan abcd no sekian jalan sekian Jalan abcd no sekian jalan sekian" />
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/label_high_priority" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent">
 
                 <TextView
-                    android:id="@+id/date_request"
-                    style="@style/TextView.PoppinsNormal12spGrey"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="01-02-2020" />
-
-                <TextView
-                    android:id="@+id/name_user"
-                    style="@style/TextView.PoppinsNormal12spGrey"
+                    android:id="@+id/tvReceiver"
+                    style="@style/TextView.PoppinsNormal16spBlack"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:text="By : Yusinta" />
-            </LinearLayout>
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="35dp"
+                    android:text="KCP KANTOR" />
 
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_baseline_location_on_24" />
+
+                    <TextView
+                        android:id="@+id/tvAddress"
+                        style="@style/TextView.PoppinsNormal12spBlack"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="10dp"
+                        android:text="Location" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_baseline_date_range_24" />
+
+                    <TextView
+                        android:id="@+id/date_request"
+                        style="@style/TextView.PoppinsNormal12spBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center"
+                        android:text="01-02-2020" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/ic_baseline_assignment_ind_24" />
+
+                    <TextView
+                        android:id="@+id/name_user"
+                        style="@style/TextView.PoppinsNormal12spBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+
+                        android:text="Yusinta" />
+
+                    <CheckBox
+                        android:id="@+id/checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

@@ -6,6 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.PUT
 
 interface NewTaskApi {
-    @GET("/task/waiting")
+    @GET("task/waiting")
     suspend fun getNewTask(): ResponseNewTaskWaiting
 }
