@@ -57,6 +57,7 @@
                     android:orientation="horizontal">
 
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/cvMyTask"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
@@ -100,6 +101,7 @@
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/cvNewTask"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
@@ -149,6 +151,7 @@
                     android:orientation="horizontal">
 
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/cvStart"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
@@ -178,6 +181,7 @@
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/cvCheckPoint"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"

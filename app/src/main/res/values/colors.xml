@@ -13,4 +13,5 @@
     <color name="hintColor">#8D92A3</color>
     <color name="textColor">#202020</color>
     <color name="errorColor">#D32F2F</color>
+    <color name="selectedColor">#22bb33</color>
 </resources>

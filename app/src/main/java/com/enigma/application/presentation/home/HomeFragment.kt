@@ -49,6 +49,19 @@ class HomeFragment : Fragment() {
             refreshHome.setOnRefreshListener {
                 refreshHome.isRefreshing = false
             }
+
+            cvMyTask.setOnClickListener {
+
+            }
+            cvNewTask.setOnClickListener {
+                findNavController().navigate(R.id.action_global_taskFragment)
+            }
+            cvCheckPoint.setOnClickListener {
+            }
+            cvStart.setOnClickListener {
+
+            }
+
         }
         return binding.root
     }

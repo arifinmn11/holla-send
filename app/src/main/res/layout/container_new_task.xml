@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <tag
+        android:id="@+id/keyId"
+        android:value="" />
+
+    <ImageView
+        android:id="@+id/selected_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/ic_baseline_check_circle_24"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/unselected_card"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent">
+
+
+            <TextView
+                android:id="@+id/tvReceiver"
+                style="@style/TextView.PoppinsNormal16spBlack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="35dp"
+                android:text="KCP KANTOR" />
+
+            <TextView
+                android:id="@+id/tvAddress"
+                style="@style/TextView.PoppinsNormal12spGrey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="Jalan abcd no sekian jalan sekian Jalan abcd no sekian jalan sekian" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/date_request"
+                    style="@style/TextView.PoppinsNormal12spGrey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="01-02-2020" />
+
+                <TextView
+                    android:id="@+id/name_user"
+                    style="@style/TextView.PoppinsNormal12spGrey"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="By : Yusinta" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

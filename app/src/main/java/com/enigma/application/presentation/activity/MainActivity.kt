@@ -48,18 +48,13 @@ class MainActivity : AppCompatActivity() {
                         navHostFragment.findNavController()
                             .navigate(R.id.action_global_homeFragment)
                     }
-                    MENU_TASK -> {
-                        bottomNavigation.menu.getItem(1).isEnabled = false
-                        navHostFragment.findNavController()
-                            .navigate(R.id.action_global_taskFragment)
-                    }
                     MENU_HISTORY -> {
-                        bottomNavigation.menu.getItem(2).isEnabled = false
+                        bottomNavigation.menu.getItem(1).isEnabled = false
                         navHostFragment.findNavController()
                             .navigate(R.id.action_global_historyFragment)
                     }
                     MENU_PROFILE -> {
-                        bottomNavigation.menu.getItem(3).isEnabled = false
+                        bottomNavigation.menu.getItem(2).isEnabled = false
                         navHostFragment.findNavController()
                             .navigate(R.id.action_global_profileFragment)
                     }
@@ -75,7 +70,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun enableButton() {
-        for (i in 0..3) {
+        for (i in 0..2) {
             binding.bottomNavigation.menu.getItem(i).isEnabled = true
         }
     }

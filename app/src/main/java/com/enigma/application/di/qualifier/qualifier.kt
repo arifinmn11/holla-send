@@ -18,3 +18,7 @@ annotation class GetProfile
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class PostRegistration
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class GetNewTaskWaiting

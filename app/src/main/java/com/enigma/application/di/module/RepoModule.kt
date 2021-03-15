@@ -1,13 +1,8 @@
 package com.enigma.application.di.module
 
 import com.enigma.application.data.model.auth.RequestAuth
-import com.enigma.application.data.repository.AuthRepository
-import com.enigma.application.data.repository.AuthRepositoryImpl
-import com.enigma.application.data.repository.RegistrationRepository
-import com.enigma.application.data.repository.RegistrationRepositoryImpl
-import com.enigma.application.di.qualifier.GetProfile
-import com.enigma.application.di.qualifier.PostAuth
-import com.enigma.application.di.qualifier.PostRegistration
+import com.enigma.application.data.repository.*
+import com.enigma.application.di.qualifier.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -30,5 +25,8 @@ internal abstract class RepoModule {
     @PostRegistration
     abstract fun bindRepositoryPostRegistration(repositoryImpl: RegistrationRepositoryImpl): RegistrationRepository
 
+    @Binds
+    @GetNewTaskWaiting
+    abstract fun bindRepositoryNewTask(repositoryIpl: NewTaskRepositoryImpl): NewTaskRepository
 }
 
