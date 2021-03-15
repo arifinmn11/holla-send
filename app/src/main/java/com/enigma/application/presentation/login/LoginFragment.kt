@@ -80,17 +80,17 @@ class LoginFragment : Fragment() {
             Log.d("STATUS", "$it")
 
             binding.apply {
-                if (!it.email)
+                if (!it.username)
                     etUsername.background = resources.getDrawable(R.drawable.radius_edit_text)
                 else
                     etUsername.background = resources.getDrawable(R.drawable.error_edit_text)
 
-                if (!it.username)
+                if (!it.password)
                     etPassword.background = resources.getDrawable(R.drawable.radius_edit_text)
                 else
                     etPassword.background = resources.getDrawable(R.drawable.error_edit_text)
 
-                if (!it.email && !it.username) {
+                if (!it.username && !it.password) {
                     loadingDialog.show()
 
                     val username = etUsername.text.toString()
@@ -102,16 +102,25 @@ class LoginFragment : Fragment() {
 
                             when (it?.code) {
                                 200 -> {
+                                    if (it.data?.role == "COURIER") {
+                                        sharedPref.edit()
+                                            .putString(Constans.TOKEN, "${it.data?.token}")
+                                            .apply()
+                                        findNavController().navigate(R.id.action_global_homeFragment)
+                                    } else {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "This application only for courier!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                     loadingDialog.hide()
-                                    sharedPref.edit().putString(Constans.TOKEN, "${it.data?.token}")
-                                        .apply()
-                                    findNavController().navigate(R.id.action_global_homeFragment)
                                 }
-                                401 -> {
+                                500 -> {
                                     loadingDialog.hide()
                                     Toast.makeText(
                                         requireContext(),
-                                        "Password or Email invalid!",
+                                        "There isn't an account for this username!",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
@@ -119,7 +128,7 @@ class LoginFragment : Fragment() {
                                     loadingDialog.hide()
                                     Toast.makeText(
                                         requireContext(),
-                                        "Password or Email invalid!",
+                                        "Incorrect password.!",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
@@ -127,7 +136,7 @@ class LoginFragment : Fragment() {
                                     loadingDialog.hide()
                                     Toast.makeText(
                                         requireContext(),
-                                        "Password or Email invalid!",
+                                        "Incorrect username and / or password.",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }

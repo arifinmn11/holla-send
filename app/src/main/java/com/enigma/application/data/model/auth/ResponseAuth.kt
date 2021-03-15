@@ -24,5 +24,9 @@ data class ResponseAuth(
 data class Data(
 
     @field:SerializedName("token")
-    val token: String
+    val token: String,
+
+    @field:SerializedName("role")
+    val role: String
+
 ) : Parcelable

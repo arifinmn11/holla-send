@@ -12,13 +12,18 @@ import androidx.navigation.fragment.findNavController
 import com.enigma.application.R
 import com.enigma.application.databinding.FragmentSplashBinding
 import com.enigma.application.presentation.activity.ActivityViewModel
+import com.enigma.application.utils.Constans
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SplashFragment : Fragment() {
     lateinit var binding: FragmentSplashBinding
     lateinit var viewModel: SplashViewModel
     lateinit var activityViewModel: ActivityViewModel
+
+    @Inject
+    lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,15 +46,21 @@ class SplashFragment : Fragment() {
 
     fun subscribe() {
         viewModel.checkToken().observe(this) {
-            Log.d("MASUK", "$it")
             activityViewModel.setBottomVisibility(false)
             when (it?.code) {
                 200 -> {
                     activityViewModel.setBottomVisibility(true)
                     findNavController().navigate(R.id.action_global_homeFragment)
                 }
-                404 -> findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
-                else -> findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+                404 -> {
+                    sharedPref.edit()
+                        .putString(Constans.TOKEN, "")
+                        .apply()
+                    findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+                }
+                else -> {
+                    findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+                }
             }
         }
     }
