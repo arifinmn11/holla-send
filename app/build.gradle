@@ -82,6 +82,9 @@ dependencies {
     // Validation
     implementation "com.wajahatkarim3.easyvalidation:easyvalidation-core:1.0.1"
 
+    // Multiselect
+    implementation 'com.bignerdranch.android:recyclerview-multiselect:0.2'
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
 }

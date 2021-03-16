@@ -132,13 +132,21 @@
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-
                         android:text="Yusinta" />
+
+                    <Button
+                        android:id="@+id/send_button"
+                        style="@style/TextView.PoppinsNormal12spWhite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/primary"
+                        android:text="Add" />
 
                     <CheckBox
                         android:id="@+id/checkbox"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 

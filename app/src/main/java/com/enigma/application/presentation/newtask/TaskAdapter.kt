@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.enigma.application.R
 import com.enigma.application.data.model.newtask.DataItem
+import com.enigma.application.databinding.ContainerNewTaskBinding
 
 class TaskAdapter(val onClickListener: TaskOnClickListener) :
     RecyclerView.Adapter<TaskViewHolder>() {
@@ -12,8 +13,11 @@ class TaskAdapter(val onClickListener: TaskOnClickListener) :
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val v = inflater.inflate(R.layout.container_new_task, parent, false)
+        val v =
+            LayoutInflater.from(parent.context).inflate(R.layout.container_new_task, parent, false)
+
+
+
         return TaskViewHolder(v, onClickListener)
     }
 
@@ -22,7 +26,6 @@ class TaskAdapter(val onClickListener: TaskOnClickListener) :
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = tasks[position]
         holder.bind(task)
-
     }
 
     fun setView(data: List<DataItem>) {
