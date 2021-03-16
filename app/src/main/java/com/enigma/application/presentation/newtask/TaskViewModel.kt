@@ -65,7 +65,7 @@ class TaskViewModel @Inject constructor(
     }
 
     //     handle click : send task
-    fun sendToMyTask(id: String) =
+    fun sendToMyTaskApi(id: String) =
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
             withTimeout(10000) {
                 var response: ResponseAddTaskToMyTask? = null
@@ -115,7 +115,7 @@ class TaskViewModel @Inject constructor(
     }
 
     override fun onClick(id: String) {
-        Log.d("THIS IS ON CLICK!", "$id")
+        Log.d("THIS IS ON CLICK!", id)
         setPutTask(id)
     }
 

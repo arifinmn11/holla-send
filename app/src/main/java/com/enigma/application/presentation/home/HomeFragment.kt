@@ -51,15 +51,17 @@ class HomeFragment : Fragment() {
             }
 
             cvMyTask.setOnClickListener {
-
+                findNavController().navigate(R.id.action_global_myTaskFragment)
             }
+
             cvNewTask.setOnClickListener {
                 findNavController().navigate(R.id.action_global_taskFragment)
             }
+
             cvCheckPoint.setOnClickListener {
             }
-            cvStart.setOnClickListener {
 
+            cvStart.setOnClickListener {
             }
 
         }

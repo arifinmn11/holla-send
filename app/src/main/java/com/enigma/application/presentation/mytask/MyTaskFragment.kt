@@ -1,141 +1,79 @@
-package com.enigma.application.presentation.newtask
+package com.enigma.application.presentation.mytask
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.enigma.application.R
-import com.enigma.application.data.model.newtask.DataItem
-import com.enigma.application.data.model.newtask.ResponseNewTaskWaiting
-import com.enigma.application.databinding.FragmentTaskBinding
+import com.enigma.application.data.model.mytask.ResponseMyTask
+import com.enigma.application.data.model.mytask.DataItem
+import com.enigma.application.databinding.FragmentMyTaskBinding
 import com.enigma.application.presentation.activity.ActivityViewModel
 import com.enigma.application.utils.component.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TaskFragment : Fragment() {
-    lateinit var binding: FragmentTaskBinding
-    lateinit var viewModel: TaskViewModel
+class MyTaskFragment : Fragment() {
+    private lateinit var binding: FragmentMyTaskBinding
+    lateinit var viewModel: MyTaskViewModel
     lateinit var activityViewModel: ActivityViewModel
-    lateinit var rvAdapter: TaskAdapter
     lateinit var alertDialog: AlertDialog
+    lateinit var rvAdapter: MyTaskAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
         subscribe()
         alertDialog = LoadingDialog.build(requireContext())
-        binding = FragmentTaskBinding.inflate(layoutInflater)
+        binding = FragmentMyTaskBinding.inflate(layoutInflater)
     }
 
     override fun onCreateView(
-
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         binding.apply {
             alertDialog.show()
-            rvAdapter = TaskAdapter(viewModel)
+            rvAdapter = MyTaskAdapter(viewModel)
 
-            taskList.apply {
+            myTaskList.apply {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = rvAdapter
-            }
-
-            // first time opened menu
-            viewModel.getNewTasksApi().observe(requireActivity()) {
-                alertDialog.show()
-                handleGetApi(it)
             }
 
             // on Refresh
             refreshNewTask.setOnRefreshListener {
                 alertDialog.show()
-                viewModel.getNewTasksApi().observe(requireActivity()) {
+                viewModel.getMyTaskApi().observe(requireActivity()) {
                     handleGetApi(it)
                 }
             }
-
-            btnAddTask.setOnClickListener {
-//                viewModel.getData()
-            }
-
-            buttonBack.setOnClickListener {
-                findNavController().popBackStack()
-            }
         }
+
         return binding.root
     }
 
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
+    fun initViewModel() {
+        viewModel = ViewModelProvider(this).get(MyTaskViewModel::class.java)
         activityViewModel = ViewModelProvider(requireActivity()).get(ActivityViewModel::class.java)
     }
 
-    private fun subscribe() {
+    fun subscribe() {
         activityViewModel.setBottomVisibility(false)
-        viewModel.getTaskSelected.observe(this) {
-            binding.apply {
-                if (it.size > 0) {
-                    selectedTask.text = it.size.toString()
-                    selectedTask.visibility = View.VISIBLE
-                    refreshNewTask.setPadding(0, 0, 0, 140)
-                    refreshNewTask.isEnabled = false
-                } else {
-                    selectedTask.visibility = View.GONE
-                    refreshNewTask.setPadding(0, 0, 0, 0)
-                    refreshNewTask.isEnabled = true
-                }
-            }
-        }
-
-        viewModel.putListenAdd.observe(this) { it ->
-            alertDialog.show()
-            viewModel.sendToMyTaskApi(it).observe(this) {
-                when (it?.code) {
-                    200 -> {
-                        alertDialog.hide()
-                        Toast.makeText(
-                            requireContext(),
-                            "Task from ${it.data?.requestBy?.userDetails?.firstName} ${it.data?.requestBy?.userDetails?.lastName} " +
-                                    "has been add to My Task",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                        viewModel.getNewTasksApi().observe(requireActivity()) {
-                            alertDialog.show()
-                            handleGetApi(it)
-                        }
-                    }
-                    400 -> {
-                        alertDialog.hide()
-                        Toast.makeText(
-                            requireContext(),
-                            "Something wrong, Please check your connection or data has been assign by other courier",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                    }
-
-                    else -> {
-                        alertDialog.hide()
-                        Toast.makeText(
-                            requireContext(), "Something wrong, try Again", Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
+        viewModel.getMyTaskApi().observe(this) {
+            handleGetApi(it)
         }
     }
 
-    fun handleGetApi(data: ResponseNewTaskWaiting?) {
+    fun handleGetApi(data: ResponseMyTask?) {
         binding.apply {
             data?.code.apply {
                 when (this) {
@@ -145,8 +83,9 @@ class TaskFragment : Fragment() {
                         refreshNewTask.isRefreshing = false
                         alertDialog.hide()
                         rvAdapter.setView(this as List<DataItem>)
+                        totalTask.text = this.size.toString()
 
-                        if (this.size == 0)
+                        if (this.isEmpty())
                             pageWarning(true, 200)
 
                     }
@@ -175,13 +114,9 @@ class TaskFragment : Fragment() {
         }
     }
 
-    fun handlePutApi(id: String) {
-
-    }
 
     fun pageWarning(status: Boolean, error: Int? = 0) {
         binding.apply {
-
             notificationAlert.visibility = View.GONE
             messageAlert.visibility = View.GONE
             logoAlert.visibility = View.GONE
@@ -216,6 +151,6 @@ class TaskFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() = TaskFragment
+        fun newInstance() = MyTaskFragment()
     }
 }

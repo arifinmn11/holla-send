@@ -2,6 +2,7 @@ package com.enigma.application.presentation.newtask
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.enigma.application.R
 import com.enigma.application.data.model.newtask.DataItem
 import com.enigma.application.databinding.ContainerNewTaskBinding
 
@@ -23,6 +24,18 @@ class TaskViewHolder(
 
                 buttonAddTask.setOnClickListener {
                     this.id?.let { id -> onClickListener.onClick(id) }
+                }
+
+                when (priority) {
+                    "HIGH" -> {
+                        labelPriority.setImageResource(R.drawable.label_high_priority)
+                    }
+                    "MEDIUM" -> {
+                        labelPriority.setImageResource(R.drawable.label_meidum_priority)
+                    }
+                    "LOW" -> {
+                        labelPriority.setImageResource(R.drawable.label_low_priority)
+                    }
                 }
             }
         }

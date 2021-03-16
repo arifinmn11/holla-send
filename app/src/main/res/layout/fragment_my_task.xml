@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.newtask.TaskFragment">
+    tools:context=".presentation.mytask.MyTaskFragment">
+
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -40,23 +41,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="26dp"
                     android:layout_weight="1"
-                    android:text="Waiting Tasks" />
+                    android:text="My Tasks" />
 
                 <TextView
-                    android:id="@+id/selected_task"
+                    android:id="@+id/totalTask"
                     style="@style/TextView.PoppinsNormal16spWhite"
                     android:layout_width="wrap_content"
                     android:layout_height="26dp"
                     android:layout_marginRight="20dp"
-                    android:text="0"
-                    android:visibility="invisible" />
+                    android:text=""
+                    android:visibility="visible" />
             </LinearLayout>
         </LinearLayout>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/refresh_new_task"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="55dp">
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -69,7 +71,7 @@
                     android:orientation="vertical">
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/taskList"
+                        android:id="@+id/myTaskList"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
@@ -103,21 +105,28 @@
             android:textAlignment="center" />
     </LinearLayout>
 
+
     <LinearLayout
         android:id="@+id/action_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:outlineAmbientShadowColor="@color/black"
+        android:outlineProvider="bounds"
+        android:outlineSpotShadowColor="@color/black"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         app:layout_constraintBottom_toBottomOf="parent">
+
         <Button
-            android:id="@+id/btnAddTask"
+            android:id="@+id/btnStartStop"
             style="@style/TextView.PoppinsNormal16spWhite"
             android:layout_width="match_parent"
             android:layout_height="44dp"
-            android:background="@drawable/radius_button_primary_tasks"
-            android:text="Add to My Task"
-            android:visibility="gone"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/button_secondary"
+            android:text="START TO PICKUP !"
             app:layout_constraintBottom_toBottomOf="parent" />
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
