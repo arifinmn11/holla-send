@@ -8,8 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.isVisible
-import androidx.core.view.marginBottom
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,10 +16,8 @@ import com.enigma.application.data.model.newtask.DataItem
 import com.enigma.application.data.model.newtask.ResponseNewTaskWaiting
 import com.enigma.application.databinding.FragmentTaskBinding
 import com.enigma.application.presentation.activity.ActivityViewModel
-import com.enigma.application.utils.Constans
 import com.enigma.application.utils.component.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_task.*
 
 @AndroidEntryPoint
 class TaskFragment : Fragment() {
@@ -40,11 +36,12 @@ class TaskFragment : Fragment() {
     }
 
     override fun onCreateView(
+
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding.apply {
-
+            alertDialog.show()
             rvAdapter = TaskAdapter(viewModel)
             taskList.apply {
                 layoutManager = LinearLayoutManager(requireContext())
@@ -64,7 +61,6 @@ class TaskFragment : Fragment() {
                     handleGetApi(it)
                 }
             }
-
 
             btnAddTask.setOnClickListener {
 //                viewModel.getData()
@@ -101,6 +97,43 @@ class TaskFragment : Fragment() {
             }
         }
 
+        viewModel.putListenAdd.observe(this) { it ->
+            alertDialog.show()
+            viewModel.sendToMyTask(it).observe(this) {
+                when (it?.code) {
+                    200 -> {
+                        alertDialog.hide()
+                        Toast.makeText(
+                            requireContext(),
+                            "Task from ${it.data?.requestBy?.userDetails?.firstName} ${it.data?.requestBy?.userDetails?.lastName} " +
+                                    "has been add to My Task",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                        viewModel.getNewTasksApi().observe(requireActivity()) {
+                            alertDialog.show()
+                            handleGetApi(it)
+                        }
+                    }
+                    400 -> {
+                        alertDialog.hide()
+                        Toast.makeText(
+                            requireContext(),
+                            "Something wrong, Please check your connection or data has been assign by other courier",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+
+                    else -> {
+                        alertDialog.hide()
+                        Toast.makeText(
+                            requireContext(), "Something wrong, try Again", Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
     }
 
     fun handleGetApi(data: ResponseNewTaskWaiting?) {
@@ -113,6 +146,10 @@ class TaskFragment : Fragment() {
                         refreshNewTask.isRefreshing = false
                         alertDialog.hide()
                         rvAdapter.setView(this as List<DataItem>)
+
+                        if (this.size == 0)
+                            pageWarning(true, 200)
+
                     }
                     404 -> {
                         refreshNewTask.isRefreshing = false
@@ -139,6 +176,10 @@ class TaskFragment : Fragment() {
         }
     }
 
+    fun handlePutApi(id: String) {
+
+    }
+
     fun pageWarning(status: Boolean, error: Int? = 0) {
         binding.apply {
 
@@ -158,6 +199,12 @@ class TaskFragment : Fragment() {
                     logoAlert.setImageResource(R.drawable.ic_undraw_authentication_fsn5)
                     messageAlert.text = "Please relogin, your token is expired!"
                 }
+
+                200 -> {
+                    logoAlert.setImageResource(R.drawable.ic_undraw_no_data_re_kwbl)
+                    messageAlert.text = "Task not available!"
+                }
+
                 else -> {
                     rvAdapter.setView(clearData)
                     logoAlert.setImageResource(R.drawable.ic_undraw_notify_re_65on)

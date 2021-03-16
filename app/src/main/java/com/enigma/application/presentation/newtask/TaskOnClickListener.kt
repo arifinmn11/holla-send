@@ -5,5 +5,5 @@ import android.view.View
 interface TaskOnClickListener {
     fun onSelected(id: String)
     fun onUnSelected(id: String)
-    fun onClick(id: Int)
+    fun onClick(id: String)
 }

@@ -28,5 +28,9 @@ internal abstract class RepoModule {
     @Binds
     @GetNewTaskWaiting
     abstract fun bindRepositoryNewTask(repositoryIpl: NewTaskRepositoryImpl): NewTaskRepository
+
+    @Binds
+    @PutAddToMyTask
+    abstract fun bindRepositoryAddToMyTask(repositoryIpl: NewTaskRepositoryImpl): NewTaskRepository
 }
 

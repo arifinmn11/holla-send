@@ -22,3 +22,8 @@ annotation class PostRegistration
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class GetNewTaskWaiting
+
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class PutAddToMyTask

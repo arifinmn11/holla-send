@@ -108,5 +108,9 @@ data class DataItem(
     val priority: String? = null,
 
     @field:SerializedName("status")
-    val status: String? = null
+    val status: String? = null,
+
+    @field:SerializedName("createDate")
+    val createDate: String? = null
+
 ) : Parcelable
