@@ -36,21 +36,20 @@ class MyTaskFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
-        subscribe()
         alertDialog = LoadingDialog.build(requireContext())
         binding = FragmentMyTaskBinding.inflate(layoutInflater)
+        initViewModel()
+        subscribe()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        alertDialog.show()
 
         binding.apply {
-            alertDialog.show()
             rvAdapter = MyTaskAdapter(viewModel)
-
             myTaskList.apply {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = rvAdapter
@@ -65,10 +64,14 @@ class MyTaskFragment : Fragment() {
             }
 
             // on Start and change status to PICK UP
-            btnStartStop.setOnClickListener {
+            buttonStart.setOnClickListener {
                 viewModel.startToPickUpApi().observe(requireActivity()) { data ->
                     handleUpdateApi(data)
                 }
+            }
+
+            buttonStop.setOnClickListener {
+
             }
 
             buttonBack.setOnClickListener {
@@ -86,10 +89,8 @@ class MyTaskFragment : Fragment() {
 
     fun subscribe() {
         activityViewModel.setBottomVisibility(false)
-        viewModel.getMyTasksApi().observe(this) { data ->
-            handleGetApi(data)
-        }
 
+        // Live Data on Click Cancel
         viewModel.unAssignTask.observe(this) { data ->
             val dialogView =
                 LayoutInflater.from(requireContext())
@@ -115,7 +116,6 @@ class MyTaskFragment : Fragment() {
                     data?.id?.let { id ->
                         dialogBuilder.dismiss()
                         viewModel.unAssignMyTaskApi(id).observe(this@MyTaskFragment) { res ->
-                            Log.d("UNASSIGN", res.toString())
                             when (res?.code) {
                                 200 -> {
                                     Toast.makeText(
@@ -146,6 +146,7 @@ class MyTaskFragment : Fragment() {
                 }
             }
         }
+        // Live Data on Click Done
         viewModel.doneTask.observe(this) { dataItem ->
             val dialogView =
                 LayoutInflater.from(requireContext())
@@ -208,6 +209,38 @@ class MyTaskFragment : Fragment() {
                 }
             }
         }
+
+        // Check Activity ID
+        viewModel.getCheckActivityApi().observe(this) { res ->
+            res?.code.apply {
+                when (this) {
+                    200 -> {
+                        res?.data?.id?.let {
+                            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                            viewModel.setActivityId(it)
+                            binding.apply {
+                                buttonStart.visibility = View.GONE
+                                buttonStop.visibility = View.VISIBLE
+                            }
+                        }
+                    }
+                    else -> {
+                        binding.apply {
+                            buttonStop.visibility = View.GONE
+                            buttonStart.visibility = View.VISIBLE
+                        }
+
+                    }
+                }
+            }
+
+        }
+
+        // Get My Task
+        viewModel.getMyTasksApi().observe(this) { data ->
+            handleGetApi(data)
+        }
+
     }
 
 
@@ -297,7 +330,6 @@ class MyTaskFragment : Fragment() {
         }
     }
 
-
     fun pageWarning(status: Boolean, error: Int? = 0) {
         binding.apply {
             notificationAlert.visibility = View.GONE
@@ -321,6 +353,7 @@ class MyTaskFragment : Fragment() {
                     logoAlert.setImageResource(R.drawable.ic_undraw_no_data_re_kwbl)
                     messageAlert.text = "Task not available!"
                 }
+
 
                 else -> {
                     rvAdapter.setView(clearData)

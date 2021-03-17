@@ -16,7 +16,7 @@ import com.enigma.application.R
 import com.enigma.application.data.model.auth.RequestAuth
 import com.enigma.application.databinding.FragmentLoginBinding
 import com.enigma.application.presentation.activity.ActivityViewModel
-import com.enigma.application.utils.Constans
+import com.enigma.application.utils.Constants
 import com.enigma.application.utils.component.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -104,7 +104,7 @@ class LoginFragment : Fragment() {
                                 200 -> {
                                     if (it.data?.role == "COURIER") {
                                         sharedPref.edit()
-                                            .putString(Constans.TOKEN, "${it.data?.token}")
+                                            .putString(Constants.TOKEN, "${it.data?.token}")
                                             .apply()
                                         findNavController().navigate(R.id.action_global_homeFragment)
                                     } else {
@@ -134,7 +134,7 @@ class LoginFragment : Fragment() {
                                 }
                                 else -> {
                                     sharedPref.edit()
-                                        .putString(Constans.TOKEN, "Bearer ")
+                                        .putString(Constants.TOKEN, "Bearer ")
                                         .apply()
                                     loadingDialog.hide()
                                     Toast.makeText(

@@ -2,7 +2,6 @@ package com.enigma.application.presentation.splash
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.enigma.application.R
 import com.enigma.application.databinding.FragmentSplashBinding
 import com.enigma.application.presentation.activity.ActivityViewModel
-import com.enigma.application.utils.Constans
+import com.enigma.application.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -54,7 +53,7 @@ class SplashFragment : Fragment() {
                 }
                 404 -> {
                     sharedPref.edit()
-                        .putString(Constans.TOKEN, "")
+                        .putString(Constants.TOKEN, "")
                         .apply()
                     findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
                 }

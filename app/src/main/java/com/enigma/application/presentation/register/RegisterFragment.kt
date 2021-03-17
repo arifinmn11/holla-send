@@ -18,7 +18,7 @@ import com.enigma.application.data.model.register.RequestRegister
 import com.enigma.application.data.model.register.User
 import com.enigma.application.data.model.register.UserDetails
 import com.enigma.application.databinding.FragmentRegisterBinding
-import com.enigma.application.utils.Constans
+import com.enigma.application.utils.Constants
 import com.enigma.application.utils.component.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_register.*
@@ -120,7 +120,7 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
             etAddress.background = resources.getDrawable(R.drawable.radius_edit_text)
 
             when (it.status) {
-                Constans.VALIDATION_SUCCESS -> {
+                Constants.VALIDATION_SUCCESS -> {
                     registration?.let { register ->
                         viewModel.postRegister(register).observe(this) {
                             loadingDialog.show()
@@ -152,32 +152,32 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
                         }
                     }
                 }
-                Constans.VALIDATION_USERNAME -> {
+                Constants.VALIDATION_USERNAME -> {
                     etUsername.background = resources.getDrawable(R.drawable.error_edit_text)
                 }
-                Constans.VALIDATION_EMAIL -> {
+                Constants.VALIDATION_EMAIL -> {
                     etEmail.background = resources.getDrawable(R.drawable.error_edit_text)
                 }
-                Constans.VALIDATION_PASSWORD -> {
+                Constants.VALIDATION_PASSWORD -> {
                     etPassword.background = resources.getDrawable(R.drawable.error_edit_text)
                 }
-                Constans.VALIDATION_CONFIRM_PASSWORD -> {
+                Constants.VALIDATION_CONFIRM_PASSWORD -> {
                     etPasswordConfirm.background = resources.getDrawable(R.drawable.error_edit_text)
                 }
-                Constans.VALIDATION_FIRSTNAME -> {
+                Constants.VALIDATION_FIRSTNAME -> {
                     etFirstName.background = resources.getDrawable(R.drawable.error_edit_text)
                 }
-                Constans.VALIDATION_LASTNAME -> {
+                Constants.VALIDATION_LASTNAME -> {
                     etLastName.background = resources.getDrawable(R.drawable.error_edit_text)
                 }
-                Constans.VALIDATION_IDENTIFICATION -> {
+                Constants.VALIDATION_IDENTIFICATION -> {
                     spinnerIdentity.background = resources.getDrawable(R.drawable.error_edit_text)
                 }
-                Constans.VALIDATION_NO_IDENTIFICATION -> {
+                Constants.VALIDATION_NO_IDENTIFICATION -> {
                     etIdentificationNumber.background =
                         resources.getDrawable(R.drawable.error_edit_text)
                 }
-                Constans.VALIDATION_ADDRESS -> {
+                Constants.VALIDATION_ADDRESS -> {
                     etAddress.background = resources.getDrawable(R.drawable.error_edit_text)
                 }
             }

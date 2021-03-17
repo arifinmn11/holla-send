@@ -119,7 +119,7 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <Button
-            android:id="@+id/btnStartStop"
+            android:id="@+id/button_start"
             style="@style/TextView.PoppinsNormal16spWhite"
             android:layout_width="match_parent"
             android:layout_height="44dp"
@@ -127,6 +127,19 @@
             android:layout_marginRight="5dp"
             android:background="@drawable/button_secondary"
             android:text="START TO PICKUP !"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent" />
+        <Button
+            android:id="@+id/button_stop"
+            style="@style/TextView.PoppinsNormal16spWhite"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/button_warning"
+            android:text="STOP !"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent" />
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -37,5 +37,10 @@ internal abstract class RepoModule {
     @GetMyTaskUnFinished
     abstract fun bindRepositoryGetMyTaskUnFinished(repositoryIpl: MyTaskRepositoryImpl): MyTaskRepository
 
+    @Binds
+    @CourierActivity
+    abstract fun bindRepositoryCheckCourierActivity(repositoryIpl: CourierActivityRepositoryImpl): CourierActivityRepository
+
+
 }
 

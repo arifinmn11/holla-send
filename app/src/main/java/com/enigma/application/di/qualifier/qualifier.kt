@@ -31,3 +31,8 @@ annotation class PutAddToMyTask
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class GetMyTaskUnFinished
+
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class CourierActivity

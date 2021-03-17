@@ -1,9 +1,6 @@
 package com.enigma.application.di.module
 
-import com.enigma.application.data.api.AuthApi
-import com.enigma.application.data.api.MyTaskApi
-import com.enigma.application.data.api.NewTaskApi
-import com.enigma.application.data.api.RegistrationApi
+import com.enigma.application.data.api.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,6 +34,12 @@ class ApiModule {
     @Provides
     fun provideMyTaskApi(retrofit: Retrofit): MyTaskApi {
         return retrofit.create(MyTaskApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideCourierActivity(retrofit: Retrofit): CourierActivityApi {
+        return retrofit.create(CourierActivityApi::class.java)
     }
 
 }

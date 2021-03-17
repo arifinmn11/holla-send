@@ -2,10 +2,13 @@ package com.enigma.application.presentation.mytask
 
 import android.util.Log
 import androidx.lifecycle.*
+import com.enigma.application.data.model.courier_activty.ResponseCourierActivity
 import com.enigma.application.data.model.mytask.DataItem
 import com.enigma.application.data.model.mytask.ResponseMyTask
 import com.enigma.application.data.model.mytask.ResponseMyTasks
+import com.enigma.application.data.repository.CourierActivityRepository
 import com.enigma.application.data.repository.MyTaskRepository
+import com.enigma.application.di.qualifier.CourierActivity
 import com.enigma.application.di.qualifier.GetMyTaskUnFinished
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,11 +17,20 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class MyTaskViewModel @Inject constructor(@GetMyTaskUnFinished val repository: MyTaskRepository) :
+class MyTaskViewModel @Inject constructor(
+    @GetMyTaskUnFinished val repository: MyTaskRepository,
+    @CourierActivity val repoCourier: CourierActivityRepository
+) :
     ViewModel(), MyTaskOnClickListener {
 
     private var _doneTask = MutableLiveData<DataItem>()
     private var _unAssignTask = MutableLiveData<DataItem>()
+    private var _activityId = MutableLiveData<String>()
+
+    val activityId: LiveData<String>
+        get() {
+            return _activityId
+        }
 
     val doneTask: LiveData<DataItem>
         get() {
@@ -30,6 +42,42 @@ class MyTaskViewModel @Inject constructor(@GetMyTaskUnFinished val repository: M
             return _unAssignTask
         }
 
+    fun getCheckActivityApi() = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+        withTimeout(5000) {
+            var response: ResponseCourierActivity? = null
+            try {
+                response = repoCourier.getActivity()
+            } catch (e: Exception) {
+                Log.d("EXCEPTION", "$e")
+                response =
+                    ResponseCourierActivity(
+                        code = 400,
+                        data = null,
+                        message = "Something wrong with your connection!",
+                    )
+            } finally {
+                emit(response)
+            }
+        }
+    }
+
+    fun putDoneActivityApi() = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+        withTimeout(5000) {
+            var response: ResponseCourierActivity? = null
+            try {
+                response = repoCourier.putActivity()
+            } catch (e: Exception) {
+                response =
+                    ResponseCourierActivity(
+                        code = 400,
+                        data = null,
+                        message = "Something wrong with your connection!",
+                    )
+            } finally {
+                emit(response)
+            }
+        }
+    }
 
     fun getMyTasksApi() = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
         withTimeout(5000) {
@@ -104,6 +152,10 @@ class MyTaskViewModel @Inject constructor(@GetMyTaskUnFinished val repository: M
             }
         }
     }
+    
+    fun setActivityId(id: String) {
+        _activityId.postValue(id)
+    }
 
     private fun setUnAssign(data: DataItem) {
         _unAssignTask.postValue(data)
@@ -112,6 +164,7 @@ class MyTaskViewModel @Inject constructor(@GetMyTaskUnFinished val repository: M
     private fun setDone(data: DataItem) {
         _doneTask.postValue(data)
     }
+
 
     override fun onClickUnAssign(data: DataItem) {
         setUnAssign(data)

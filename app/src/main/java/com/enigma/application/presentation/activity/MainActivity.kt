@@ -1,26 +1,16 @@
 package com.enigma.application.presentation.activity
 
 import android.content.SharedPreferences
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.enigma.application.R
 import com.enigma.application.databinding.ActivityMainBinding
-import com.enigma.application.utils.Constans
-import com.enigma.application.utils.Constans.Companion.MENU_HISTORY
-import com.enigma.application.utils.Constans.Companion.MENU_HOME
-import com.enigma.application.utils.Constans.Companion.MENU_PROFILE
-import com.enigma.application.utils.Constans.Companion.MENU_TASK
+import com.enigma.application.utils.Constants.Companion.MENU_HISTORY
+import com.enigma.application.utils.Constants.Companion.MENU_HOME
+import com.enigma.application.utils.Constants.Companion.MENU_PROFILE
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.NonCancellable.cancel
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.newFixedThreadPoolContext
 import javax.inject.Inject
 
 @AndroidEntryPoint

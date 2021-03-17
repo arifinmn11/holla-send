@@ -2,9 +2,8 @@ package com.enigma.application.di.module
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import com.enigma.application.data.api.interceptor.AuthTokenInterceptor
-import com.enigma.application.utils.Constans
+import com.enigma.application.utils.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,7 +36,7 @@ class AppModule {
     ): Retrofit {
         return Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl(Constans.BASE_URL)
+            .baseUrl(Constants.BASE_URL)
             .addConverterFactory(gson)
             .build()
     }
