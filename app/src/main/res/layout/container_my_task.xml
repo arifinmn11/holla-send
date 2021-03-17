@@ -158,7 +158,8 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp"
-                    android:background="@color/primary_700"
+                    android:background="@drawable/button_primary"
+                    android:backgroundTint="@color/primary_700"
                     android:text="DONE" />
 
                 <Button
@@ -169,7 +170,8 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp"
-                    android:background="@color/errorColor"
+                    android:background="@drawable/button_primary"
+                    android:backgroundTint="@color/errorColor"
                     android:text="Cancel" />
 
 

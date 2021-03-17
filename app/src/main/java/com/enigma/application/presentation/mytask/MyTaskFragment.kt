@@ -1,8 +1,8 @@
 package com.enigma.application.presentation.mytask
 
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,13 +13,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.enigma.application.R
-import com.enigma.application.data.model.mytask.ResponseMyTask
 import com.enigma.application.data.model.mytask.DataItem
+import com.enigma.application.data.model.mytask.ResponseMyTasks
 import com.enigma.application.databinding.FragmentMyTaskBinding
 import com.enigma.application.presentation.activity.ActivityViewModel
-import com.enigma.application.utils.Constans
 import com.enigma.application.utils.component.LoadingDialog
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.bottom_sheet_dialog.view.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -58,15 +59,15 @@ class MyTaskFragment : Fragment() {
             // on Refresh
             refreshNewTask.setOnRefreshListener {
                 alertDialog.show()
-                viewModel.getMyTasksApi().observe(requireActivity()) {
-                    handleGetApi(it)
+                viewModel.getMyTasksApi().observe(requireActivity()) { data ->
+                    handleGetApi(data)
                 }
             }
 
             // on Start and change status to PICK UP
             btnStartStop.setOnClickListener {
-                viewModel.startToPickUpApi().observe(requireActivity()) {
-                    handleUpdateApi(it)
+                viewModel.startToPickUpApi().observe(requireActivity()) { data ->
+                    handleUpdateApi(data)
                 }
             }
 
@@ -85,45 +86,161 @@ class MyTaskFragment : Fragment() {
 
     fun subscribe() {
         activityViewModel.setBottomVisibility(false)
-        viewModel.getMyTasksApi().observe(this) {
-            handleGetApi(it)
+        viewModel.getMyTasksApi().observe(this) { data ->
+            handleGetApi(data)
         }
-        viewModel.unAssignTask.observe(this) {
-            Toast.makeText(requireContext(), "$it", Toast.LENGTH_SHORT).show()
+
+        viewModel.unAssignTask.observe(this) { data ->
+            val dialogView =
+                LayoutInflater.from(requireContext())
+                    .inflate(R.layout.bottom_sheet_dialog, null, false)
+            val dialogBuilder = BottomSheetDialog(requireContext())
+            dialogBuilder.setContentView(dialogView)
+            dialogBuilder.show()
+            dialogView.apply {
+                title_dialog.text = "Are you sure drop this task?"
+
+                data.destination?.apply {
+                    text_receiver.text = this?.name ?: ""
+                    text_location.text = this?.address ?: ""
+                }
+                data.requestBy?.userDetails.apply {
+                    text_user.text = "${this?.firstName} ${this?.lastName}"
+                }
+                data.createDate.apply {
+                    text_date.text = this?.substring(0, 10)
+                }
+
+                button_positive.setOnClickListener {
+                    data?.id?.let { id ->
+                        dialogBuilder.dismiss()
+                        viewModel.unAssignMyTaskApi(id).observe(this@MyTaskFragment) { res ->
+                            Log.d("UNASSIGN", res.toString())
+                            when (res?.code) {
+                                200 -> {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Data has been drop!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    viewModel.getMyTasksApi().observe(this@MyTaskFragment) { data ->
+                                        handleGetApi(data)
+                                    }
+                                }
+                                else -> {
+                                    viewModel.getMyTasksApi().observe(this@MyTaskFragment) { data ->
+                                        handleGetApi(data)
+                                    }
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Something wrong, try again!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                        }
+                    }
+                }
+                button_negative.setOnClickListener {
+                    dialogBuilder.dismiss()
+                }
+            }
         }
-        viewModel.doneTask.observe(this) {
-            Toast.makeText(requireContext(), "$it", Toast.LENGTH_SHORT).show()
+        viewModel.doneTask.observe(this) { dataItem ->
+            val dialogView =
+                LayoutInflater.from(requireContext())
+                    .inflate(R.layout.bottom_sheet_dialog, null, false)
+            val dialogBuilder = BottomSheetDialog(requireContext())
+            dialogBuilder.setContentView(dialogView)
+            dialogBuilder.show()
+            dialogView.apply {
+                title_dialog.text = "Are you sure to change status to delivered??"
+
+                dataItem.destination?.apply {
+                    text_receiver.text = this?.name ?: ""
+                    text_location.text = this?.address ?: ""
+                }
+                dataItem.requestBy?.userDetails.apply {
+                    text_user.text = "${this?.firstName} ${this?.lastName}"
+                }
+                dataItem.createDate.apply {
+                    text_date.text = this?.substring(0, 10)
+                }
+
+                button_positive.setOnClickListener {
+                    dataItem?.id?.let { id ->
+                        dialogBuilder.dismiss()
+                        viewModel.doneTaskApi(id).observe(this@MyTaskFragment) { res ->
+                            Toast.makeText(
+                                requireContext(),
+                                "$res",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            when (res?.code) {
+                                200 -> {
+                                    viewModel.getMyTasksApi().observe(this@MyTaskFragment) { data ->
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Data has been change!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        handleGetApi(data)
+                                    }
+                                }
+                                else -> {
+                                    viewModel.getMyTasksApi().observe(this@MyTaskFragment) { data ->
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Something wrong, try again!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        handleGetApi(data)
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+
+                }
+                button_negative.setOnClickListener {
+                    dialogBuilder.dismiss()
+                }
+            }
         }
     }
 
 
-
-    fun handleGetApi(data: ResponseMyTask?) {
+    fun handleGetApi(data: ResponseMyTasks?) {
         binding.apply {
             data?.code.apply {
                 when (this) {
                     200 -> {
                         if (data?.data?.isEmpty() == true) {
-
-                        }
-
-                        data?.data?.apply {
-                            this[0]?.courierActivity?.id?.apply {
-                                btnStartStop.isEnabled = false
-                                btnStartStop.setBackgroundColor(Color.parseColor("#FAFAFA"))
-                                sharedPref.edit()
-                                    .putString(Constans.ACTIVITY_ID, this)
-                                    .apply()
-                            }
-
                             pageWarning(status = false)
                             refreshNewTask.isRefreshing = false
                             alertDialog.hide()
-                            rvAdapter.setView(this as List<DataItem>)
-                            totalTask.text = this.size.toString()
+                            pageWarning(true, 200)
+                        } else {
 
-                            if (this.isEmpty())
-                                pageWarning(true, 200)
+                            data?.data?.apply {
+//                            this[0]?.courierActivity?.id?.apply {
+//                                btnStartStop.isEnabled = false
+//                                btnStartStop.setBackgroundColor(Color.parseColor("#FAFAFA"))
+//                                sharedPref.edit()
+//                                    .putString(Constans.ACTIVITY_ID, this)
+//                                    .apply()
+//                            }
+
+                                pageWarning(status = false)
+                                refreshNewTask.isRefreshing = false
+                                alertDialog.hide()
+                                rvAdapter.setView(this as List<DataItem>)
+                                totalTask.text = this.size.toString()
+
+                                if (this.isEmpty())
+                                    pageWarning(true, 200)
+                            }
                         }
                     }
 
@@ -152,7 +269,7 @@ class MyTaskFragment : Fragment() {
         }
     }
 
-    fun handleUpdateApi(data: ResponseMyTask?) {
+    fun handleUpdateApi(data: ResponseMyTasks?) {
         data?.code.apply {
             when (this) {
                 200 -> data?.data.apply {

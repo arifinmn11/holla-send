@@ -133,6 +133,9 @@ class LoginFragment : Fragment() {
                                     ).show()
                                 }
                                 else -> {
+                                    sharedPref.edit()
+                                        .putString(Constans.TOKEN, "Bearer ")
+                                        .apply()
                                     loadingDialog.hide()
                                     Toast.makeText(
                                         requireContext(),

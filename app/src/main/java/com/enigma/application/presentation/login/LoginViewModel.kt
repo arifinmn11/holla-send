@@ -26,6 +26,8 @@ class LoginViewModel @Inject constructor(@PostAuth val repository: AuthRepositor
                 var response: ResponseAuth? = null
                 try {
                     response = repository.postAuth(requestAuth)
+
+                    Log.d("LOGIN", response.toString())
                 } catch (e: Exception) {
                     response =
                         ResponseAuth(

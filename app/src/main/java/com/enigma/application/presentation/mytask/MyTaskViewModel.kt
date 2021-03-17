@@ -1,7 +1,10 @@
 package com.enigma.application.presentation.mytask
 
+import android.util.Log
 import androidx.lifecycle.*
+import com.enigma.application.data.model.mytask.DataItem
 import com.enigma.application.data.model.mytask.ResponseMyTask
+import com.enigma.application.data.model.mytask.ResponseMyTasks
 import com.enigma.application.data.repository.MyTaskRepository
 import com.enigma.application.di.qualifier.GetMyTaskUnFinished
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,15 +17,15 @@ import javax.inject.Inject
 class MyTaskViewModel @Inject constructor(@GetMyTaskUnFinished val repository: MyTaskRepository) :
     ViewModel(), MyTaskOnClickListener {
 
-    private var _doneTask = MutableLiveData<String>()
-    private var _unAssignTask = MutableLiveData<String>()
+    private var _doneTask = MutableLiveData<DataItem>()
+    private var _unAssignTask = MutableLiveData<DataItem>()
 
-    val doneTask: LiveData<String>
+    val doneTask: LiveData<DataItem>
         get() {
             return _doneTask
         }
 
-    val unAssignTask: LiveData<String>
+    val unAssignTask: LiveData<DataItem>
         get() {
             return _unAssignTask
         }
@@ -30,12 +33,13 @@ class MyTaskViewModel @Inject constructor(@GetMyTaskUnFinished val repository: M
 
     fun getMyTasksApi() = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
         withTimeout(5000) {
-            var response: ResponseMyTask? = null
+            var response: ResponseMyTasks? = null
             try {
                 response = repository.getMyTask()
             } catch (e: Exception) {
+                Log.d("EXCEPTION", "$e")
                 response =
-                    ResponseMyTask(
+                    ResponseMyTasks(
                         code = 400,
                         data = null,
                         message = "Something wrong with your connection!",
@@ -48,12 +52,12 @@ class MyTaskViewModel @Inject constructor(@GetMyTaskUnFinished val repository: M
 
     fun startToPickUpApi() = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
         withTimeout(5000) {
-            var response: ResponseMyTask? = null
+            var response: ResponseMyTasks? = null
             try {
                 response = repository.postTaskToPickUp()
             } catch (e: Exception) {
                 response =
-                    ResponseMyTask(
+                    ResponseMyTasks(
                         code = 500,
                         data = null,
                         message = "Something wrong with your connection!",
@@ -70,6 +74,7 @@ class MyTaskViewModel @Inject constructor(@GetMyTaskUnFinished val repository: M
             try {
                 response = repository.putTaskToUnAssign(id)
             } catch (e: Exception) {
+                Log.d("EXCEPTION", "$e")
                 response =
                     ResponseMyTask(
                         code = 500,
@@ -100,23 +105,23 @@ class MyTaskViewModel @Inject constructor(@GetMyTaskUnFinished val repository: M
         }
     }
 
-    private fun setUnAssign(id: String) {
-        _unAssignTask.postValue(id)
+    private fun setUnAssign(data: DataItem) {
+        _unAssignTask.postValue(data)
     }
 
-    private fun setDone(id: String) {
-        _doneTask.postValue(id)
+    private fun setDone(data: DataItem) {
+        _doneTask.postValue(data)
     }
 
-    override fun onClickUnAssign(id: String) {
-        setUnAssign(id)
+    override fun onClickUnAssign(data: DataItem) {
+        setUnAssign(data)
     }
 
-    override fun onClickDetail(id: String) {
+    override fun onClickDetail(data: DataItem) {
         TODO("Not yet implemented")
     }
 
-    override fun onClickDone(id: String) {
-        setDone(id)
+    override fun onClickDone(data: DataItem) {
+        setDone(data)
     }
 }

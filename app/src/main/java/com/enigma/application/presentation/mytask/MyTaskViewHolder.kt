@@ -14,6 +14,12 @@ class MyTaskViewHolder(view: View, val onClickListener: MyTaskOnClickListener) :
         binding.apply {
             data?.apply {
 
+                buttonCancelTask.setOnClickListener {
+                    onClickListener.onClickUnAssign(data)
+                }
+                buttonDoneTask.setOnClickListener {
+                    onClickListener.onClickDone(data)
+                }
                 when (priority) {
                     "HIGH" -> {
                         labelPriority.setImageResource(R.drawable.label_high_priority)
@@ -46,13 +52,6 @@ class MyTaskViewHolder(view: View, val onClickListener: MyTaskOnClickListener) :
                     "${this.requestBy?.userDetails?.firstName} ${this.requestBy?.userDetails?.lastName}"
                 statusTask.text = this.status
 
-                buttonCancelTask.setOnClickListener {
-                    this.id?.let { id -> onClickListener.onClickUnAssign(id) }
-                }
-
-                buttonDoneTask.setOnClickListener {
-                    this.id?.let { id -> onClickListener.onClickDone(id) }
-                }
 
 //                buttonAddTask.setOnClickListener {
 //                    this.id?.let { id -> onClickListener.onClickAction(id) }
