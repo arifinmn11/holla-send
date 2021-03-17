@@ -5,13 +5,14 @@ import java.util.regex.Pattern
 class Constans {
     companion object {
         // URL
-        val BASE_URL = "http://192.168.43.164:8080/"
+        val BASE_URL = "http://10.10.12.251:8080/"
 
         // SHARED PREFERENCES TAG
         val TOKEN = "TOKEN"
         val USERNAME = "USERNAME"
         val PASSWORD = "PASSWORD"
         val PREREFERENCES = "PREFERENCES"
+        val ACTIVITY_ID = "ACTIVITY_ID"
 
         // VALIDATION REGEX
         val VALID_EMAIL_REGEX = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"

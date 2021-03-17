@@ -1,7 +1,8 @@
 package com.enigma.application.presentation.mytask
 
+import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,14 +10,17 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.enigma.application.R
 import com.enigma.application.data.model.mytask.ResponseMyTask
 import com.enigma.application.data.model.mytask.DataItem
 import com.enigma.application.databinding.FragmentMyTaskBinding
 import com.enigma.application.presentation.activity.ActivityViewModel
+import com.enigma.application.utils.Constans
 import com.enigma.application.utils.component.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MyTaskFragment : Fragment() {
@@ -26,6 +30,8 @@ class MyTaskFragment : Fragment() {
     lateinit var alertDialog: AlertDialog
     lateinit var rvAdapter: MyTaskAdapter
 
+    @Inject
+    lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,9 +58,20 @@ class MyTaskFragment : Fragment() {
             // on Refresh
             refreshNewTask.setOnRefreshListener {
                 alertDialog.show()
-                viewModel.getMyTaskApi().observe(requireActivity()) {
+                viewModel.getMyTasksApi().observe(requireActivity()) {
                     handleGetApi(it)
                 }
+            }
+
+            // on Start and change status to PICK UP
+            btnStartStop.setOnClickListener {
+                viewModel.startToPickUpApi().observe(requireActivity()) {
+                    handleUpdateApi(it)
+                }
+            }
+
+            buttonBack.setOnClickListener {
+                findNavController().popBackStack()
             }
         }
 
@@ -68,27 +85,48 @@ class MyTaskFragment : Fragment() {
 
     fun subscribe() {
         activityViewModel.setBottomVisibility(false)
-        viewModel.getMyTaskApi().observe(this) {
+        viewModel.getMyTasksApi().observe(this) {
             handleGetApi(it)
         }
+        viewModel.unAssignTask.observe(this) {
+            Toast.makeText(requireContext(), "$it", Toast.LENGTH_SHORT).show()
+        }
+        viewModel.doneTask.observe(this) {
+            Toast.makeText(requireContext(), "$it", Toast.LENGTH_SHORT).show()
+        }
     }
+
+
 
     fun handleGetApi(data: ResponseMyTask?) {
         binding.apply {
             data?.code.apply {
                 when (this) {
-                    200 -> data?.data.apply {
-                        Log.d("DATAS", "$this")
-                        pageWarning(status = false)
-                        refreshNewTask.isRefreshing = false
-                        alertDialog.hide()
-                        rvAdapter.setView(this as List<DataItem>)
-                        totalTask.text = this.size.toString()
+                    200 -> {
+                        if (data?.data?.isEmpty() == true) {
 
-                        if (this.isEmpty())
-                            pageWarning(true, 200)
+                        }
 
+                        data?.data?.apply {
+                            this[0]?.courierActivity?.id?.apply {
+                                btnStartStop.isEnabled = false
+                                btnStartStop.setBackgroundColor(Color.parseColor("#FAFAFA"))
+                                sharedPref.edit()
+                                    .putString(Constans.ACTIVITY_ID, this)
+                                    .apply()
+                            }
+
+                            pageWarning(status = false)
+                            refreshNewTask.isRefreshing = false
+                            alertDialog.hide()
+                            rvAdapter.setView(this as List<DataItem>)
+                            totalTask.text = this.size.toString()
+
+                            if (this.isEmpty())
+                                pageWarning(true, 200)
+                        }
                     }
+
                     404 -> {
                         refreshNewTask.isRefreshing = false
                         pageWarning(true, 404)
@@ -109,6 +147,34 @@ class MyTaskFragment : Fragment() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+                }
+            }
+        }
+    }
+
+    fun handleUpdateApi(data: ResponseMyTask?) {
+        data?.code.apply {
+            when (this) {
+                200 -> data?.data.apply {
+
+                }
+                400 -> {
+                    pageWarning(true, 404)
+                    alertDialog.hide()
+                    Toast.makeText(
+                        requireContext(),
+                        "Your token is expired!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                else -> {
+                    pageWarning(true, 500)
+                    alertDialog.hide()
+                    Toast.makeText(
+                        requireContext(),
+                        "Something wrong with your connection!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
