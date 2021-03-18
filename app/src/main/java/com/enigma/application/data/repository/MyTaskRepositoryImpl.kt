@@ -1,6 +1,7 @@
 package com.enigma.application.data.repository
 
 import com.enigma.application.data.api.MyTaskApi
+import com.enigma.application.data.model.courier_activity.get.ResponsePickUp
 import com.enigma.application.data.model.mytask.ResponseMyTask
 import com.enigma.application.data.model.mytask.ResponseMyTasks
 import javax.inject.Inject
@@ -10,7 +11,7 @@ class MyTaskRepositoryImpl @Inject constructor(private val myTaskApi: MyTaskApi)
     override suspend fun getMyTask(): ResponseMyTasks =
         myTaskApi.getTaskUnFinished()
 
-    override suspend fun postTaskToPickUp(): ResponseMyTasks =
+    override suspend fun postTaskToPickUp(): ResponsePickUp =
         myTaskApi.postTaskToPickUp()
 
     override suspend fun putTaskToDone(id: String): ResponseMyTask =

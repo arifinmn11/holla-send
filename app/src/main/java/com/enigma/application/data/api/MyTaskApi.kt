@@ -1,5 +1,6 @@
 package com.enigma.application.data.api
 
+import com.enigma.application.data.model.courier_activity.get.ResponsePickUp
 import com.enigma.application.data.model.mytask.ResponseMyTask
 import com.enigma.application.data.model.mytask.ResponseMyTasks
 import retrofit2.http.GET
@@ -12,7 +13,7 @@ interface MyTaskApi {
     suspend fun getTaskUnFinished(): ResponseMyTasks
 
     @POST("courier-activity")
-    suspend fun postTaskToPickUp(): ResponseMyTasks
+        suspend fun postTaskToPickUp(): ResponsePickUp
 
     @PUT("task/finish/{id}")
     suspend fun putTaskToDone(

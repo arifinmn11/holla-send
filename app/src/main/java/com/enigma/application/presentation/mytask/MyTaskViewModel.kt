@@ -2,6 +2,7 @@ package com.enigma.application.presentation.mytask
 
 import android.util.Log
 import androidx.lifecycle.*
+import com.enigma.application.data.model.courier_activity.get.ResponsePickUp
 import com.enigma.application.data.model.courier_activty.ResponseCourierActivity
 import com.enigma.application.data.model.mytask.DataItem
 import com.enigma.application.data.model.mytask.ResponseMyTask
@@ -100,12 +101,13 @@ class MyTaskViewModel @Inject constructor(
 
     fun startToPickUpApi() = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
         withTimeout(5000) {
-            var response: ResponseMyTasks? = null
+            var response: ResponsePickUp? = null
             try {
                 response = repository.postTaskToPickUp()
             } catch (e: Exception) {
+                Log.d("ERROR PICKUP", e.toString())
                 response =
-                    ResponseMyTasks(
+                    ResponsePickUp(
                         code = 500,
                         data = null,
                         message = "Something wrong with your connection!",
@@ -152,7 +154,7 @@ class MyTaskViewModel @Inject constructor(
             }
         }
     }
-    
+
     fun setActivityId(id: String) {
         _activityId.postValue(id)
     }

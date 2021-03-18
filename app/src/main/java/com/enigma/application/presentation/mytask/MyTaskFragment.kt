@@ -21,6 +21,11 @@ import com.enigma.application.utils.component.LoadingDialog
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.bottom_sheet_dialog.view.*
+import kotlinx.android.synthetic.main.bottom_sheet_dialog.view.button_negative
+import kotlinx.android.synthetic.main.bottom_sheet_dialog.view.button_positive
+import kotlinx.android.synthetic.main.bottom_sheet_dialog.view.text_user
+import kotlinx.android.synthetic.main.bottom_sheet_dialog.view.title_dialog
+import kotlinx.android.synthetic.main.bottom_sheet_done_confirmation.view.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -65,12 +70,95 @@ class MyTaskFragment : Fragment() {
 
             // on Start and change status to PICK UP
             buttonStart.setOnClickListener {
-                viewModel.startToPickUpApi().observe(requireActivity()) { data ->
-                    handleUpdateApi(data)
+                alertDialog.show()
+                val dialogView =
+                    LayoutInflater.from(requireContext())
+                        .inflate(R.layout.bottom_sheet_done_confirmation, null, false)
+                val dialogBuilder = BottomSheetDialog(requireContext())
+                dialogBuilder.setContentView(dialogView)
+                dialogBuilder.show()
+                dialogView.apply {
+                    button_positive.setOnClickListener {
+                        alertDialog.show()
+                        viewModel.startToPickUpApi().observe(requireActivity()) { res ->
+                            Log.d("CETAK RES", res.toString())
+                            res?.code.apply {
+                                when (this) {
+                                    200 -> {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Change status to pick up!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        alertDialog.hide()
+                                        subscribe()
+                                    }
+                                    else -> {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Sorry something error!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        alertDialog.hide()
+                                    }
+                                }
+                            }
+
+                        }
+                        dialogBuilder.dismiss()
+                    }
+
+                    button_negative.setOnClickListener {
+                        dialogBuilder.dismiss()
+
+                    }
                 }
+
             }
 
             buttonStop.setOnClickListener {
+                val dialogView =
+                    LayoutInflater.from(requireContext())
+                        .inflate(R.layout.bottom_sheet_done_confirmation, null, false)
+                val dialogBuilder = BottomSheetDialog(requireContext())
+                dialogBuilder.setContentView(dialogView)
+                dialogBuilder.show()
+                dialogView.apply {
+                    button_positive.setOnClickListener {
+                        alertDialog.show()
+                        viewModel.putDoneActivityApi().observe(requireActivity()) { res ->
+                            res?.code.apply {
+                                when (this) {
+                                    200 -> {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "My task has been delivered!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        subscribe()
+                                        alertDialog.hide()
+                                    }
+                                    else -> {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Sorry something error!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        alertDialog.hide()
+                                    }
+                                }
+                            }
+
+                        }
+
+                        dialogBuilder.dismiss()
+                    }
+
+                    button_negative.setOnClickListener {
+                        dialogBuilder.dismiss()
+
+                    }
+                }
 
             }
 
@@ -90,8 +178,38 @@ class MyTaskFragment : Fragment() {
     fun subscribe() {
         activityViewModel.setBottomVisibility(false)
 
+        // Get My Task
+        fun getMyTask() = viewModel.getMyTasksApi().observe(requireActivity()) { data ->
+            handleGetApi(data)
+        }
+        // Check Activity ID
+        viewModel.getCheckActivityApi().observe(requireActivity()) { res ->
+            res?.code.apply {
+                when (this) {
+                    200 -> {
+                        res?.data?.id?.let {
+                            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                            viewModel.setActivityId(it)
+                            binding.apply {
+                                buttonStart.visibility = View.GONE
+                                buttonStop.visibility = View.VISIBLE
+                                getMyTask()
+                            }
+                        }
+                    }
+                    else -> {
+                        binding.apply {
+                            buttonStop.visibility = View.GONE
+                            getMyTask()
+                        }
+
+                    }
+                }
+            }
+
+        }
         // Live Data on Click Cancel
-        viewModel.unAssignTask.observe(this) { data ->
+        viewModel.unAssignTask.observe(requireActivity()) { data ->
             val dialogView =
                 LayoutInflater.from(requireContext())
                     .inflate(R.layout.bottom_sheet_dialog, null, false)
@@ -115,7 +233,7 @@ class MyTaskFragment : Fragment() {
                 button_positive.setOnClickListener {
                     data?.id?.let { id ->
                         dialogBuilder.dismiss()
-                        viewModel.unAssignMyTaskApi(id).observe(this@MyTaskFragment) { res ->
+                        viewModel.unAssignMyTaskApi(id).observe(requireActivity()) { res ->
                             when (res?.code) {
                                 200 -> {
                                     Toast.makeText(
@@ -123,12 +241,10 @@ class MyTaskFragment : Fragment() {
                                         "Data has been drop!",
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                    viewModel.getMyTasksApi().observe(this@MyTaskFragment) { data ->
-                                        handleGetApi(data)
-                                    }
+                                    getMyTask()
                                 }
                                 else -> {
-                                    viewModel.getMyTasksApi().observe(this@MyTaskFragment) { data ->
+                                    viewModel.getMyTasksApi().observe(requireActivity()) { data ->
                                         handleGetApi(data)
                                     }
                                     Toast.makeText(
@@ -147,7 +263,7 @@ class MyTaskFragment : Fragment() {
             }
         }
         // Live Data on Click Done
-        viewModel.doneTask.observe(this) { dataItem ->
+        viewModel.doneTask.observe(requireActivity()) { dataItem ->
             val dialogView =
                 LayoutInflater.from(requireContext())
                     .inflate(R.layout.bottom_sheet_dialog, null, false)
@@ -170,8 +286,7 @@ class MyTaskFragment : Fragment() {
 
                 button_positive.setOnClickListener {
                     dataItem?.id?.let { id ->
-                        dialogBuilder.dismiss()
-                        viewModel.doneTaskApi(id).observe(this@MyTaskFragment) { res ->
+                        viewModel.doneTaskApi(id).observe(requireActivity()) { res ->
                             Toast.makeText(
                                 requireContext(),
                                 "$res",
@@ -179,23 +294,25 @@ class MyTaskFragment : Fragment() {
                             ).show()
                             when (res?.code) {
                                 200 -> {
-                                    viewModel.getMyTasksApi().observe(this@MyTaskFragment) { data ->
+                                    viewModel.getMyTasksApi().observe(requireActivity()) { data ->
                                         Toast.makeText(
                                             requireContext(),
                                             "Data has been change!",
                                             Toast.LENGTH_SHORT
                                         ).show()
                                         handleGetApi(data)
+                                        dialogBuilder.dismiss()
                                     }
                                 }
                                 else -> {
-                                    viewModel.getMyTasksApi().observe(this@MyTaskFragment) { data ->
+                                    viewModel.getMyTasksApi().observe(requireActivity()) { data ->
                                         Toast.makeText(
                                             requireContext(),
                                             "Something wrong, try again!",
                                             Toast.LENGTH_SHORT
                                         ).show()
                                         handleGetApi(data)
+                                        dialogBuilder.dismiss()
                                     }
 
                                 }
@@ -205,41 +322,12 @@ class MyTaskFragment : Fragment() {
 
                 }
                 button_negative.setOnClickListener {
+                    alertDialog.hide()
                     dialogBuilder.dismiss()
                 }
             }
         }
 
-        // Check Activity ID
-        viewModel.getCheckActivityApi().observe(this) { res ->
-            res?.code.apply {
-                when (this) {
-                    200 -> {
-                        res?.data?.id?.let {
-                            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-                            viewModel.setActivityId(it)
-                            binding.apply {
-                                buttonStart.visibility = View.GONE
-                                buttonStop.visibility = View.VISIBLE
-                            }
-                        }
-                    }
-                    else -> {
-                        binding.apply {
-                            buttonStop.visibility = View.GONE
-                            buttonStart.visibility = View.VISIBLE
-                        }
-
-                    }
-                }
-            }
-
-        }
-
-        // Get My Task
-        viewModel.getMyTasksApi().observe(this) { data ->
-            handleGetApi(data)
-        }
 
     }
 
@@ -250,29 +338,32 @@ class MyTaskFragment : Fragment() {
                 when (this) {
                     200 -> {
                         if (data?.data?.isEmpty() == true) {
-                            pageWarning(status = false)
                             refreshNewTask.isRefreshing = false
                             alertDialog.hide()
+                            rvAdapter.setView(arrayListOf())
+                            buttonStart.visibility = View.GONE
                             pageWarning(true, 200)
+
                         } else {
-
                             data?.data?.apply {
-//                            this[0]?.courierActivity?.id?.apply {
-//                                btnStartStop.isEnabled = false
-//                                btnStartStop.setBackgroundColor(Color.parseColor("#FAFAFA"))
-//                                sharedPref.edit()
-//                                    .putString(Constans.ACTIVITY_ID, this)
-//                                    .apply()
-//                            }
-
-                                pageWarning(status = false)
                                 refreshNewTask.isRefreshing = false
                                 alertDialog.hide()
+                                pageWarning(status = false)
+
                                 rvAdapter.setView(this as List<DataItem>)
                                 totalTask.text = this.size.toString()
 
-                                if (this.isEmpty())
-                                    pageWarning(true, 200)
+                                when (this[0].status) {
+                                    "PICKUP" -> {
+                                        buttonStart.visibility = View.GONE
+                                        buttonStop.visibility = View.VISIBLE
+                                    }
+                                    "ASSIGNED" -> {
+                                        buttonStart.visibility = View.VISIBLE
+                                        buttonStop.visibility = View.GONE
+                                    }
+                                }
+
                             }
                         }
                     }
@@ -306,7 +397,7 @@ class MyTaskFragment : Fragment() {
         data?.code.apply {
             when (this) {
                 200 -> data?.data.apply {
-
+                    subscribe()
                 }
                 400 -> {
                     pageWarning(true, 404)
@@ -351,7 +442,7 @@ class MyTaskFragment : Fragment() {
 
                 200 -> {
                     logoAlert.setImageResource(R.drawable.ic_undraw_no_data_re_kwbl)
-                    messageAlert.text = "Task not available!"
+                    messageAlert.text = "My Task not available!"
                 }
 
 
