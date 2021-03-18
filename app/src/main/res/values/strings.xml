@@ -7,7 +7,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_description">Make Everything Easy!</string>
-    <string name="title_login">HelloSent.</string>
+    <string name="title_login">holaSend</string>
 
     <string-array name="identity">
         <item>KTP</item>

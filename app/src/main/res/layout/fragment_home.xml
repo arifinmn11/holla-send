@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -38,17 +38,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
                             android:paddingLeft="30dp"
-                            android:text="Welcome" />
-
-                        <TextView
-                            style="@style/TextView.PoppinsNormal16spWhite"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:paddingLeft="30dp"
-                            android:text="Aseo Saeo / Courier" />
+                            android:text="Dashboard" />
                     </LinearLayout>
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -56,11 +49,148 @@
                     android:layout_marginTop="-60dp"
                     android:orientation="horizontal">
 
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            tools:ignore="UselessParent">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="105dp"/>
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginRight="5dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        style="@style/TextView.PoppinsNormal16spWhite"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="15dp"
+                                        android:layout_marginTop="10dp"
+                                        android:layout_marginRight="15dp"
+                                        android:text="Assigned"
+                                        android:textColor="@color/primary_700" />
+
+                                    <TextView
+                                        style="@style/TextView.PoppinsNormal32spBlack"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_marginRight="10dp"
+                                        android:text="0"
+                                        android:textAlignment="center"
+                                        android:textColor="@color/primary_700"
+                                        android:textSize="40sp" />
+
+
+                                </LinearLayout>
+
+                            </androidx.cardview.widget.CardView>
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginRight="10dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        style="@style/TextView.PoppinsNormal16spWhite"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="15dp"
+                                        android:layout_marginTop="10dp"
+                                        android:layout_marginRight="15dp"
+                                        android:text="Pick up"
+                                        android:textColor="@color/primary_700" />
+
+                                    <TextView
+                                        style="@style/TextView.PoppinsNormal32spBlack"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_marginRight="10dp"
+                                        android:text="0"
+                                        android:textAlignment="center"
+                                        android:textColor="@color/primary_700"
+                                        android:textSize="40sp" />
+
+                                </LinearLayout>
+
+                            </androidx.cardview.widget.CardView>
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        style="@style/TextView.PoppinsNormal16spWhite"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="15dp"
+                                        android:layout_marginTop="10dp"
+                                        android:layout_marginRight="15dp"
+                                        android:text="Delivered"
+                                        android:textColor="@color/primary_700" />
+
+                                    <TextView
+                                        style="@style/TextView.PoppinsNormal32spBlack"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_marginRight="10dp"
+                                        android:text="0"
+                                        android:textAlignment="center"
+                                        android:textColor="@color/primary_700"
+                                        android:textSize="40sp" />
+
+                                </LinearLayout>
+
+                            </androidx.cardview.widget.CardView>
+
+                        </LinearLayout>
+                    </HorizontalScrollView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp">
+
                     <androidx.cardview.widget.CardView
                         android:id="@+id/cvMyTask"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="20dp"
                         android:layout_weight="1">
 
                         <LinearLayout
@@ -93,7 +223,6 @@
                                 android:background="@drawable/radius_notification"
                                 android:gravity="center"
                                 android:minWidth="20dp"
-
                                 android:text="20"
                                 android:visibility="invisible" />
 
@@ -104,7 +233,10 @@
                         android:id="@+id/cvNewTask"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginBottom="20dp"
                         android:layout_weight="1">
 
                         <LinearLayout
@@ -143,73 +275,9 @@
 
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
+
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/cvStart"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:layout_weight="1">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="100dp"
-                                android:layout_margin="15dp"
-                                android:src="@drawable/ic_undraw_on_the_way_re_swjt_2_" />
-
-                            <TextView
-                                style="@style/TextView.PoppinsNormal16spBlack"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="5dp"
-                                android:text="Start To Sent"
-                                android:textAlignment="center" />
-
-
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/cvCheckPoint"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:layout_weight="1">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical">
-
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="100dp"
-                                android:layout_margin="15dp"
-                                android:src="@drawable/ic_undraw_location_review_dmxd_disabled" />
-
-                            <TextView
-                                style="@style/TextView.PoppinsNormal16spGrey"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="5dp"
-                                android:text="Check Point"
-                                android:textAlignment="center" />
-
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-                </LinearLayout>
             </LinearLayout>
 
         </ScrollView>
@@ -217,4 +285,4 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
-</FrameLayout>
+</RelativeLayout>
