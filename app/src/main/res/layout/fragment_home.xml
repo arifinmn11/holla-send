@@ -94,6 +94,7 @@
                                         android:textColor="@color/primary_700" />
 
                                     <TextView
+                                        android:id="@+id/assigned_count"
                                         style="@style/TextView.PoppinsNormal32spBlack"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
@@ -131,6 +132,7 @@
                                         android:textColor="@color/primary_700" />
 
                                     <TextView
+                                        android:id="@+id/pickup_count"
                                         style="@style/TextView.PoppinsNormal32spBlack"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
@@ -167,6 +169,7 @@
                                         android:textColor="@color/primary_700" />
 
                                     <TextView
+                                        android:id="@+id/delivered_count"
                                         style="@style/TextView.PoppinsNormal32spBlack"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
@@ -281,17 +284,17 @@
                                 android:textAlignment="center" />
 
                             <TextView
-                                android:id="@+id/new_task_notification"
+                                android:id="@+id/new_task_count"
                                 style="@style/TextView.PoppinsNormal12spWhite"
                                 android:layout_width="wrap_content"
                                 android:layout_height="20dp"
                                 android:layout_gravity="center"
                                 android:layout_marginTop="-155dp"
-                                android:layout_marginRight="33dp"
+                                android:layout_marginRight="33.5dp"
                                 android:background="@color/primary"
                                 android:gravity="center"
                                 android:minWidth="40dp"
-                                android:text="1" />
+                                android:text="" />
 
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>

@@ -1,26 +1,29 @@
 package com.enigma.application.presentation.home
 
+import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.enigma.application.R
 import com.enigma.application.databinding.FragmentHomeBinding
 import com.enigma.application.presentation.activity.ActivityViewModel
-import com.enigma.application.presentation.splash.SplashViewModel
+import com.enigma.application.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_home.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
     lateinit var viewModel: HomeViewModel
     lateinit var activityViewModel: ActivityViewModel
+
+    @Inject
+    lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +50,7 @@ class HomeFragment : Fragment() {
             activityViewModel.setBottomVisibility(true)
 
             refreshHome.setOnRefreshListener {
-                refreshHome.isRefreshing = false
+                subscribe()
             }
 
             cvMyTask.setOnClickListener {
@@ -58,7 +61,6 @@ class HomeFragment : Fragment() {
                 findNavController().navigate(R.id.action_global_taskFragment)
             }
 
-
         }
         return binding.root
     }
@@ -68,8 +70,34 @@ class HomeFragment : Fragment() {
         activityViewModel = ViewModelProvider(requireActivity()).get(ActivityViewModel::class.java)
     }
 
-    fun subscribe() {
-
+    private fun subscribe() {
+        viewModel.getDashboard().observe(requireActivity()) { res ->
+            res?.code.apply {
+                when (this) {
+                    200 -> {
+                        binding.apply {
+                            refreshHome.isRefreshing = false
+                            assignedCount.text = res?.data?.assigned.toString()
+                            pickupCount.text = res?.data?.pickedUp.toString()
+                            deliveredCount.text = res?.data?.delivered.toString()
+                            newTaskCount.text = res?.data?.waiting.toString()
+                        }
+                    }
+                    401 -> {
+                        binding.apply {
+                            refreshHome.isRefreshing = false
+                            sharedPref.edit()
+                                .putString(Constants.TOKEN, "")
+                                .apply()
+                            findNavController().navigate(R.id.action_global_loginFragment)
+                        }
+                    }
+                    else -> {
+                        binding.refreshHome.isRefreshing = false
+                    }
+                }
+            }
+        }
     }
 
     companion object {

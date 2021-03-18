@@ -33,6 +33,7 @@ class SplashViewModel @Inject constructor(@GetProfile val repository: AuthReposi
                         data = null
                     )
             } finally {
+                Log.d("RESPONSE", "$response")
                 emit(response)
             }
 

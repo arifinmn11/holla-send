@@ -57,6 +57,12 @@ class SplashFragment : Fragment() {
                         .apply()
                     findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
                 }
+                401 -> {
+                    sharedPref.edit()
+                        .putString(Constants.TOKEN, "")
+                        .apply()
+                    findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+                }
                 else -> {
                     findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
                 }

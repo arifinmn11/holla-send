@@ -1,13 +1,11 @@
 package com.enigma.application.di.module
 
-import com.enigma.application.data.model.auth.RequestAuth
 import com.enigma.application.data.repository.*
 import com.enigma.application.di.qualifier.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import okhttp3.Interceptor
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -40,6 +38,11 @@ internal abstract class RepoModule {
     @Binds
     @CourierActivity
     abstract fun bindRepositoryCheckCourierActivity(repositoryIpl: CourierActivityRepositoryImpl): CourierActivityRepository
+
+    @Binds
+    @Dashboard
+    abstract fun bindRepositoryGetDashboard(repositoryIpl: DashboardRepositoryImpl): DashboardRepository
+
 
 
 }

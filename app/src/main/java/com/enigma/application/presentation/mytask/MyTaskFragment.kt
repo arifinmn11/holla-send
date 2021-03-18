@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -67,6 +68,15 @@ class MyTaskFragment : Fragment() {
                     handleGetApi(data)
                 }
             }
+
+            val callback: OnBackPressedCallback =
+                object : OnBackPressedCallback(true /* enabled by default */) {
+                    override fun handleOnBackPressed() {
+                        // Handle the back button event
+                        findNavController().navigate(R.id.action_global_homeFragment)
+                    }
+                }
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
             // on Start and change status to PICK UP
             buttonStart.setOnClickListener {
@@ -163,7 +173,7 @@ class MyTaskFragment : Fragment() {
             }
 
             buttonBack.setOnClickListener {
-                findNavController().popBackStack()
+                findNavController().navigate(R.id.action_global_homeFragment)
             }
         }
 

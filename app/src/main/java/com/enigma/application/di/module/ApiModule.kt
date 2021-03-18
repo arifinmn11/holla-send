@@ -42,4 +42,11 @@ class ApiModule {
         return retrofit.create(CourierActivityApi::class.java)
     }
 
+    @Singleton
+    @Provides
+    fun provideDashboardApi(retrofit: Retrofit): DashboardApi {
+        return retrofit.create(DashboardApi::class.java)
+    }
+
+
 }

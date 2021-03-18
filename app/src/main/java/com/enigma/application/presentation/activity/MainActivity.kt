@@ -2,6 +2,7 @@ package com.enigma.application.presentation.activity
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -11,10 +12,11 @@ import com.enigma.application.utils.Constants.Companion.MENU_HISTORY
 import com.enigma.application.utils.Constants.Companion.MENU_HOME
 import com.enigma.application.utils.Constants.Companion.MENU_PROFILE
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     lateinit var binding: ActivityMainBinding
     lateinit var viewModel: ActivityViewModel
 
@@ -32,7 +34,6 @@ class MainActivity : AppCompatActivity() {
             bottomNavigation.setOnNavigationItemSelectedListener {
                 enableButton()
                 when ("$it") {
-
                     MENU_HOME -> {
                         bottomNavigation.menu.getItem(0).isEnabled = false
                         navHostFragment.findNavController()
@@ -76,7 +77,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        cancel()
+        Log.d("ON DESTROY", "DESTROY")
     }
-
 
 }

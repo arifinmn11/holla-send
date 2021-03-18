@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -67,8 +68,17 @@ class TaskFragment : Fragment() {
 //                viewModel.getData()
             }
 
+            val callback: OnBackPressedCallback =
+                object : OnBackPressedCallback(true /* enabled by default */) {
+                    override fun handleOnBackPressed() {
+                        // Handle the back button event
+                        findNavController().navigate(R.id.action_global_homeFragment)
+                    }
+                }
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
             buttonBack.setOnClickListener {
-                findNavController().popBackStack()
+                findNavController().navigate(R.id.action_global_homeFragment)
             }
         }
         return binding.root

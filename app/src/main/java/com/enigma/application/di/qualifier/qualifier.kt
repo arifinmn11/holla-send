@@ -36,3 +36,7 @@ annotation class GetMyTaskUnFinished
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class CourierActivity
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class Dashboard
