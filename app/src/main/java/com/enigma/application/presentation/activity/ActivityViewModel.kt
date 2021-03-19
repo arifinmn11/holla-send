@@ -21,4 +21,5 @@ class ActivityViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+
 }

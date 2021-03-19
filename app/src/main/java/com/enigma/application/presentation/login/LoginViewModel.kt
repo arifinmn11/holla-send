@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import com.enigma.application.data.model.auth.RequestAuth
 import com.enigma.application.data.model.auth.ResponseAuth
 import com.enigma.application.data.model.auth.ValidationLogin
+import com.enigma.application.data.model.profile.ResponseProfile
 import com.enigma.application.data.repository.AuthRepository
 import com.enigma.application.di.qualifier.PostAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,7 +36,26 @@ class LoginViewModel @Inject constructor(@PostAuth val repository: AuthRepositor
                             data = null,
                             message = "Email or Password invalid!",
                         )
+                } finally {
                     emit(response)
+                }
+            }
+        }
+
+    fun getProfile() =
+        liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+            withTimeout(5000) {
+                var response: ResponseProfile? = null
+                try {
+                    response = repository.getMe()
+                    Log.d("LOGIN", response.toString())
+                } catch (e: Exception) {
+                    response =
+                        ResponseProfile(
+                            code = 400,
+                            data = null,
+                            message = "Something wrong, try again!",
+                        )
                 } finally {
                     emit(response)
                 }

@@ -43,7 +43,7 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        activityModel.setBottomVisibility(false)
         binding.apply {
             signInButton.setOnClickListener {
 
@@ -61,6 +61,7 @@ class LoginFragment : Fragment() {
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true /* enabled by default */) {
                 override fun handleOnBackPressed() {
+
                     // Handle the back button event
                     activity?.finish()
                 }
@@ -97,16 +98,46 @@ class LoginFragment : Fragment() {
                     val password = etPassword.text.toString()
 
                     viewModel.postAuth(RequestAuth(username = username, password = password))
-                        .observe(requireActivity()) {
+                        .observe(requireActivity()) { response ->
                             loadingDialog.show()
 
-                            when (it?.code) {
+                            when (response?.code) {
                                 200 -> {
-                                    if (it.data?.role == "COURIER") {
+                                    if (response.data?.role == "COURIER") {
                                         sharedPref.edit()
-                                            .putString(Constants.TOKEN, "${it.data?.token}")
+                                            .putString(Constants.TOKEN, "${response.data?.token}")
                                             .apply()
-                                        findNavController().navigate(R.id.action_global_homeFragment)
+                                        viewModel.getProfile().observe(requireActivity()) { res ->
+                                            res?.code?.apply {
+                                                when (this) {
+                                                    200 -> {
+                                                        sharedPref.edit()
+                                                            .putString(
+                                                                Constants.FIRST_NAME,
+                                                                "${res?.data?.userDetails?.firstName}"
+                                                            )
+                                                            .putString(
+                                                                Constants.LAST_NAME,
+                                                                "${res?.data?.userDetails?.lastName}"
+                                                            )
+                                                            .putString(
+                                                                Constants.USERNAME,
+                                                                "${res?.data?.username}"
+                                                            )
+                                                            .putString(
+                                                                Constants.IDENTIFICATION_CATEGORY,
+                                                                "${res?.data?.userDetails?.identityCategory}"
+                                                            )
+                                                            .putString(
+                                                                Constants.IDENTIFICATION_NUMBER,
+                                                                "${res?.data?.userDetails?.identificationNumber}"
+                                                            ).apply()
+                                                        findNavController().navigate(R.id.action_global_homeFragment)
+                                                    }
+                                                }
+                                            }
+                                        }
+
                                     } else {
                                         Toast.makeText(
                                             requireContext(),

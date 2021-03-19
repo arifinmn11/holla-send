@@ -69,12 +69,12 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 val passwordConfirm = etPasswordConfirm.text.toString()
                 val firstName = etFirstName.text.toString()
                 val lastName = etLastName.text.toString()
-                val address = etAddress.text.toString()
-                val noIdentification = etIdentificationNumber.text.toString()
+                val address = etContact.text.toString()
+                val contactNumber = etIdentificationNumber.text.toString()
 
                 registration = RequestRegister(
                     User(password, email, username),
-                    UserDetails(firstName, lastName, identity, address, noIdentification)
+                    UserDetails(firstName, lastName, identity, address, contactNumber)
                 )
 
                 viewModel.checkValidation(
@@ -85,7 +85,7 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     firstName,
                     lastName,
                     identity,
-                    noIdentification,
+                    contactNumber,
                     address
                 )
             }
@@ -117,7 +117,7 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
             etFirstName.background = resources.getDrawable(R.drawable.radius_edit_text)
             etLastName.background = resources.getDrawable(R.drawable.radius_edit_text)
             etIdentificationNumber.background = resources.getDrawable(R.drawable.radius_edit_text)
-            etAddress.background = resources.getDrawable(R.drawable.radius_edit_text)
+            etContact.background = resources.getDrawable(R.drawable.radius_edit_text)
 
             when (it.status) {
                 Constants.VALIDATION_SUCCESS -> {
@@ -134,11 +134,10 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
                                     loadingDialog.hide()
                                     Toast.makeText(
                                         requireContext(),
-                                        "Password or Usernameis Invalid!",
+                                        "Password or Username invalid!",
                                         Toast.LENGTH_SHORT
                                     )
                                         .show()
-
                                 }
                                 else -> {
                                     loadingDialog.hide()
@@ -178,7 +177,7 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
                         resources.getDrawable(R.drawable.error_edit_text)
                 }
                 Constants.VALIDATION_ADDRESS -> {
-                    etAddress.background = resources.getDrawable(R.drawable.error_edit_text)
+                    etContact.background = resources.getDrawable(R.drawable.error_edit_text)
                 }
             }
 

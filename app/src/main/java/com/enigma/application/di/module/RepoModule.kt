@@ -29,20 +29,19 @@ internal abstract class RepoModule {
 
     @Binds
     @PutAddToMyTask
-    abstract fun bindRepositoryAddToMyTask(repositoryIpl: NewTaskRepositoryImpl): NewTaskRepository
+    abstract fun bindRepositoryAddToMyTask(repositoryImpl: NewTaskRepositoryImpl): NewTaskRepository
 
     @Binds
     @GetMyTaskUnFinished
-    abstract fun bindRepositoryGetMyTaskUnFinished(repositoryIpl: MyTaskRepositoryImpl): MyTaskRepository
+    abstract fun bindRepositoryGetMyTaskUnFinished(repositoryImpl: MyTaskRepositoryImpl): MyTaskRepository
 
     @Binds
     @CourierActivity
-    abstract fun bindRepositoryCheckCourierActivity(repositoryIpl: CourierActivityRepositoryImpl): CourierActivityRepository
+    abstract fun bindRepositoryCheckCourierActivity(repositoryImpl: CourierActivityRepositoryImpl): CourierActivityRepository
 
     @Binds
     @Dashboard
-    abstract fun bindRepositoryGetDashboard(repositoryIpl: DashboardRepositoryImpl): DashboardRepository
-
+    abstract fun bindRepositoryGetDashboard(repositoryImpl: DashboardRepositoryImpl): DashboardRepository
 
 
 }

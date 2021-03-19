@@ -9,7 +9,7 @@ import javax.inject.Inject
 class AuthTokenInterceptor @Inject constructor(val sharedPreferences: SharedPreferences) :
     Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val token = sharedPreferences.getString(Constants.TOKEN, "GET TOKEN")
+        val token = sharedPreferences.getString(Constants.TOKEN, "")
         val originalRequest = chain.request()
         val requestBuilder = originalRequest.newBuilder().header("Authorization", "Bearer $token")
         val request = requestBuilder.build()
