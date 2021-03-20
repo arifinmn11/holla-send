@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Hola Send</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="welcome_title">Hello Square World!</string>
     <string name="welcome_description"> Lorem Ipsum is simply dummy text of the printing and typesetting industry
@@ -18,4 +18,6 @@
     <string name="token_error">getInstanceId failed</string>
     <string name="handle_notification_now">We are going to do something with our notification right now!</string>
     <string name="retrieve_token">Retrieve Token</string>
+    <string name="channel_name">Channel</string>
+    <string name="channel_description">Description</string>
 </resources>

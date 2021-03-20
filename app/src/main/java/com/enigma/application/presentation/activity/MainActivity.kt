@@ -1,6 +1,9 @@
 package com.enigma.application.presentation.activity
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.*
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -10,6 +13,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
 import com.enigma.application.R
 import com.enigma.application.databinding.ActivityMainBinding
+import com.enigma.application.presentation.activity.NotificationHelper.CHANNEL_ID
 import com.enigma.application.utils.Constants.Companion.MENU_HISTORY
 import com.enigma.application.utils.Constants.Companion.MENU_HOME
 import com.enigma.application.utils.Constants.Companion.MENU_PROFILE
@@ -17,6 +21,7 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -35,11 +40,40 @@ class MainActivity : AppCompatActivity() {
         initViewModel()
         subscribe()
 
-        if (intent.extras != null) {
-            for(key in intent.extras!!.keySet()) {
-               Log.d(TAG, intent.extras!!.getString(key).toString())
-            }
-        }
+//        if (intent.extras != null) {
+//            for (key in intent.extras!!.keySet()) {
+//                Log.d(TAG, intent.extras!!.getString(key).toString())
+//            }
+//        }
+
+//        FirebaseInstanceId.getInstance().instanceId
+//            .addOnCompleteListener(OnCompleteListener { task ->
+//
+//                if (!task.isSuccessful) {
+//                    task.exception?.message
+//                    return@OnCompleteListener
+//                }
+//
+//                val token = task.result?.token
+//
+//                if (token != null) {
+//                    Log.d("Token", token)
+//                }
+//
+//            })
+
+
+        //creating notification channel if android version is greater than or equals to oreo
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            val channel = NotificationChannel(
+//                CHANNEL_ID,
+//                CHANNEL_NAME,
+//                NotificationManager.IMPORTANCE_DEFAULT
+//            )
+//            channel.description = CHANNEL_DESC
+//            val manager = getSystemService(NotificationManager::class.java)
+//            manager.createNotificationChannel(channel)
+//        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
 
@@ -85,6 +119,7 @@ class MainActivity : AppCompatActivity() {
             binding.navHostFragment.minimumHeight = maxHeight
             binding.bottomNavigation.visibility = it
         }
+
 
         if (checkGooglePlayServices()) {
             // [START retrieve_current_token]
@@ -143,5 +178,9 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         var TAG = "ACTIVITY NOFITICATION"
+        const val CHANNEL_ID = "CHANNEL"
+        private const val CHANNEL_NAME = "Simplified Coding"
+        private const val CHANNEL_DESC = "Android Push Notification Tutorial"
+
     }
 }
