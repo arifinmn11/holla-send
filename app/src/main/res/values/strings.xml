@@ -13,4 +13,9 @@
         <item>KTP</item>
         <item>SIM</item>
     </string-array>
+
+    <string name="token_prefix">Token: %s</string>
+    <string name="token_error">getInstanceId failed</string>
+    <string name="handle_notification_now">We are going to do something with our notification right now!</string>
+    <string name="retrieve_token">Retrieve Token</string>
 </resources>

@@ -1,22 +1,28 @@
 package com.enigma.application.presentation.activity
 
-import android.content.SharedPreferences
+import android.content.*
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
 import com.enigma.application.R
 import com.enigma.application.databinding.ActivityMainBinding
 import com.enigma.application.utils.Constants.Companion.MENU_HISTORY
 import com.enigma.application.utils.Constants.Companion.MENU_HOME
 import com.enigma.application.utils.Constants.Companion.MENU_PROFILE
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
+class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var viewModel: ActivityViewModel
 
@@ -28,6 +34,13 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         supportActionBar?.hide()
         initViewModel()
         subscribe()
+
+        if (intent.extras != null) {
+            for(key in intent.extras!!.keySet()) {
+               Log.d(TAG, intent.extras!!.getString(key).toString())
+            }
+        }
+
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         binding.apply {
@@ -72,13 +85,63 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
             binding.navHostFragment.minimumHeight = maxHeight
             binding.bottomNavigation.visibility = it
         }
+
+        if (checkGooglePlayServices()) {
+            // [START retrieve_current_token]
+            FirebaseInstanceId.getInstance().instanceId
+                .addOnCompleteListener(OnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        Log.w("ERROR", getString(R.string.token_error), task.exception)
+                        return@OnCompleteListener
+                    }
+
+                    // Get new Instance ID token
+                    val token = task.result?.token
+
+                    // Log and toast
+                    val msg = getString(R.string.token_prefix, token)
+                    Log.d("TAG", msg)
+                    Toast.makeText(baseContext, msg, Toast.LENGTH_LONG).show()
+                })
+            // [END retrieve_current_token]
+        } else {
+            //You won't be able to send notifications to this device
+            Log.w("TAG", "Device doesn't have google play services")
+        }
     }
 
-
-    override fun onDestroy() {
-        super.onDestroy()
-        cancel()
-        Log.d("ON DESTROY", "DESTROY")
+    override fun onStart() {
+        super.onStart()
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            messageReceiver,
+            IntentFilter("MyData")
+        )
     }
 
+    override fun onStop() {
+        super.onStop()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver)
+    }
+
+    private val messageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent) {
+            intent.extras?.getString("message")?.let { Log.d("KEY", it) }
+        }
+    }
+
+    private fun checkGooglePlayServices(): Boolean {
+        val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
+        return if (status != ConnectionResult.SUCCESS) {
+            Log.e("ERROR", "Error")
+            // ask user to update google play services.
+            false
+        } else {
+            Log.i("Etest", "Google play services updated")
+            true
+        }
+    }
+
+    companion object {
+        var TAG = "ACTIVITY NOFITICATION"
+    }
 }

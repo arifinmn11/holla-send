@@ -5,7 +5,9 @@ import java.util.regex.Pattern
 class Constants {
     companion object {
         // URL
+//        val BASE_URL = "http://192.168.43.164:8080/"
         val BASE_URL = "http://192.168.43.164:8080/"
+
 
         // SHARED PREFERENCES TAG
         val TOKEN = "TOKEN"
