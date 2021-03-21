@@ -6,6 +6,7 @@ import android.content.*
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -14,6 +15,7 @@ import androidx.navigation.findNavController
 import com.enigma.application.R
 import com.enigma.application.databinding.ActivityMainBinding
 import com.enigma.application.presentation.activity.NotificationHelper.CHANNEL_ID
+import com.enigma.application.presentation.activity.NotificationHelper.displayNotification
 import com.enigma.application.utils.Constants.Companion.MENU_HISTORY
 import com.enigma.application.utils.Constants.Companion.MENU_HOME
 import com.enigma.application.utils.Constants.Companion.MENU_PROFILE
@@ -120,7 +122,6 @@ class MainActivity : AppCompatActivity() {
             binding.bottomNavigation.visibility = it
         }
 
-
         if (checkGooglePlayServices()) {
             // [START retrieve_current_token]
             FirebaseInstanceId.getInstance().instanceId
@@ -136,12 +137,12 @@ class MainActivity : AppCompatActivity() {
                     // Log and toast
                     val msg = getString(R.string.token_prefix, token)
                     Log.d("TAG", msg)
-                    Toast.makeText(baseContext, msg, Toast.LENGTH_LONG).show()
+//                    Toast.makeText(baseContext, msg, Toast.LENGTH_LONG).show()
                 })
             // [END retrieve_current_token]
         } else {
             //You won't be able to send notifications to this device
-            Log.w("TAG", "Device doesn't have google play services")
+//            Log.w("TAG", "Device doesn't have google play services")
         }
     }
 
@@ -155,25 +156,36 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver)
+//        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        LocalBroadcastManager.getInstance(this).registerReceiver(
+//            messageReceiver,
+//            IntentFilter("MyData")
+//        )
     }
 
     private val messageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent) {
-            intent.extras?.getString("message")?.let { Log.d("KEY", it) }
+            Log.d(
+                "MESSAGE RECEIVER",
+                intent.extras?.getString("title")!! + " " + intent.extras?.getString("body")!!
+            )
+            if (context != null) {
+                displayNotification(
+                    context,
+                    intent.extras?.getString("title")!!, intent.extras?.getString("body")!!
+                )
+            }
         }
     }
 
+
     private fun checkGooglePlayServices(): Boolean {
         val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
-        return if (status != ConnectionResult.SUCCESS) {
-            Log.e("ERROR", "Error")
-            // ask user to update google play services.
-            false
-        } else {
-            Log.i("Etest", "Google play services updated")
-            true
-        }
+        return status == ConnectionResult.SUCCESS
     }
 
     companion object {

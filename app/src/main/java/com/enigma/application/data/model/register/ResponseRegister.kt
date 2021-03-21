@@ -35,8 +35,8 @@ data class Data(
     @field:SerializedName("address")
     val address: String,
 
-    @field:SerializedName("identificationNumber")
-    val identificationNumber: String,
+    @field:SerializedName("contactNumber")
+    val contactNumber: String,
 
     @field:SerializedName("id")
     val id: String

@@ -31,7 +31,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         broadcaster = LocalBroadcastManager.getInstance(this)
     }
 
-
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 

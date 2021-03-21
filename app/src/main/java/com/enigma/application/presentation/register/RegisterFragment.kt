@@ -121,9 +121,10 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
             when (it.status) {
                 Constants.VALIDATION_SUCCESS -> {
+                    loadingDialog.show()
                     registration?.let { register ->
                         viewModel.postRegister(register).observe(this) {
-                            loadingDialog.show()
+
 
                             when (it?.code) {
                                 200 -> {
@@ -194,10 +195,12 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
         AlertDialog.Builder(requireContext())
             // Title
             .setTitle("Account has been created!!")
-            .setNeutralButton("Ya", DialogInterface.OnClickListener { dialogInterface, i ->
+            .setNeutralButton("Yes", DialogInterface.OnClickListener { dialogInterface, i ->
                 findNavController().navigate(R.id.action_global_loginFragment)
             })
+            .setCancelable(false)
             .show()
+
     }
 
 

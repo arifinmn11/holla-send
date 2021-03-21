@@ -75,6 +75,7 @@ class MyTaskViewModel @Inject constructor(
                         message = "Something wrong with your connection!",
                     )
             } finally {
+                response?.message?.let { Log.d("ERROR REPO", it) }
                 emit(response)
             }
         }

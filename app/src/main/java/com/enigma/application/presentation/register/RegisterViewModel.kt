@@ -30,9 +30,6 @@ class RegisterViewModel @Inject constructor(@PostRegistration val repository: Re
                 try {
                     response = repository.postRegistration(requestRegister)
                 } catch (e: Exception) {
-                    Log.d("ERROR", "$e")
-
-                    Log.d("RESPONSE", "$e")
                     response =
                         ResponseRegister(
                             code = 400,
@@ -40,6 +37,7 @@ class RegisterViewModel @Inject constructor(@PostRegistration val repository: Re
                             message = "Email or Password not available!",
                         )
                 } finally {
+                    response?.message?.let { Log.d("MESSAGE", it) }
                     emit(response)
                 }
             }

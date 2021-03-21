@@ -27,6 +27,9 @@ import kotlinx.android.synthetic.main.bottom_sheet_dialog.view.button_positive
 import kotlinx.android.synthetic.main.bottom_sheet_dialog.view.text_user
 import kotlinx.android.synthetic.main.bottom_sheet_dialog.view.title_dialog
 import kotlinx.android.synthetic.main.bottom_sheet_done_confirmation.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -55,6 +58,8 @@ class MyTaskFragment : Fragment() {
         alertDialog.show()
 
         binding.apply {
+            getActivityApi()
+
             rvAdapter = MyTaskAdapter(viewModel)
             myTaskList.apply {
                 layoutManager = LinearLayoutManager(requireContext())
@@ -64,10 +69,10 @@ class MyTaskFragment : Fragment() {
             // on Refresh
             refreshNewTask.setOnRefreshListener {
                 alertDialog.show()
-                viewModel.getMyTasksApi().observe(requireActivity()) { data ->
-                    handleGetApi(data)
-                }
+                getActivityApi()
+
             }
+
 
             val callback: OnBackPressedCallback =
                 object : OnBackPressedCallback(true /* enabled by default */) {
@@ -91,7 +96,6 @@ class MyTaskFragment : Fragment() {
                     button_positive.setOnClickListener {
                         alertDialog.show()
                         viewModel.startToPickUpApi().observe(requireActivity()) { res ->
-                            Log.d("CETAK RES", res.toString())
                             res?.code.apply {
                                 when (this) {
                                     200 -> {
@@ -148,7 +152,22 @@ class MyTaskFragment : Fragment() {
                                         subscribe()
                                         alertDialog.hide()
                                     }
+                                    500 -> {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Remember, you have a task!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        buttonStart.visibility = View.VISIBLE
+                                        subscribe()
+                                        alertDialog.hide()
+                                    }
                                     else -> {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "${res?.code}",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                         Toast.makeText(
                                             requireContext(),
                                             "Sorry something error!",
@@ -198,7 +217,6 @@ class MyTaskFragment : Fragment() {
                 when (this) {
                     200 -> {
                         res?.data?.id?.let {
-                            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
                             viewModel.setActivityId(it)
                             binding.apply {
                                 buttonStart.visibility = View.GONE
@@ -297,11 +315,6 @@ class MyTaskFragment : Fragment() {
                 button_positive.setOnClickListener {
                     dataItem?.id?.let { id ->
                         viewModel.doneTaskApi(id).observe(requireActivity()) { res ->
-                            Toast.makeText(
-                                requireContext(),
-                                "$res",
-                                Toast.LENGTH_SHORT
-                            ).show()
                             when (res?.code) {
                                 200 -> {
                                     viewModel.getMyTasksApi().observe(requireActivity()) { data ->
@@ -351,7 +364,6 @@ class MyTaskFragment : Fragment() {
                             refreshNewTask.isRefreshing = false
                             alertDialog.hide()
                             rvAdapter.setView(arrayListOf())
-                            buttonStart.visibility = View.GONE
                             pageWarning(true, 200)
 
                         } else {
@@ -362,17 +374,6 @@ class MyTaskFragment : Fragment() {
 
                                 rvAdapter.setView(this as List<DataItem>)
                                 totalTask.text = this.size.toString()
-
-                                when (this[0].status) {
-                                    "PICKUP" -> {
-                                        buttonStart.visibility = View.GONE
-                                        buttonStop.visibility = View.VISIBLE
-                                    }
-                                    "ASSIGNED" -> {
-                                        buttonStart.visibility = View.VISIBLE
-                                        buttonStop.visibility = View.GONE
-                                    }
-                                }
 
                             }
                         }
@@ -431,6 +432,34 @@ class MyTaskFragment : Fragment() {
         }
     }
 
+    fun getActivityApi() = viewModel.getCheckActivityApi().observe(requireActivity()) { res ->
+        binding.apply {
+            alertDialog.show()
+            when (res?.code) {
+                200 -> {
+                    alertDialog.hide()
+                    buttonStart.visibility = View.GONE
+                    buttonStop.visibility = View.VISIBLE
+                    viewModel.getMyTasksApi().observe(requireActivity()) { data ->
+                        handleGetApi(data)
+                    }
+                }
+                404 -> {
+                    alertDialog.hide()
+                    buttonStart.visibility = View.VISIBLE
+                    buttonStop.visibility = View.GONE
+                    viewModel.getMyTasksApi().observe(requireActivity()) { data ->
+                        handleGetApi(data)
+                    }
+                }
+                else -> {
+                    alertDialog.hide()
+                    Log.d("SOMETHING WRONG!", "$res")
+                }
+            }
+        }
+    }
+
     fun pageWarning(status: Boolean, error: Int? = 0) {
         binding.apply {
             notificationAlert.visibility = View.GONE
@@ -453,6 +482,7 @@ class MyTaskFragment : Fragment() {
                 200 -> {
                     logoAlert.setImageResource(R.drawable.ic_undraw_no_data_re_kwbl)
                     messageAlert.text = "My Task not available!"
+                    buttonStart.visibility = View.GONE
                 }
 
 
