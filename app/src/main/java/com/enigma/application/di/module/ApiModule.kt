@@ -48,6 +48,11 @@ class ApiModule {
         return retrofit.create(DashboardApi::class.java)
     }
 
+    @Singleton
+    @Provides
+    fun provideHistoryApi(retrofit: Retrofit): HistoryApi {
+        return retrofit.create(HistoryApi::class.java)
+    }
 
 
 }

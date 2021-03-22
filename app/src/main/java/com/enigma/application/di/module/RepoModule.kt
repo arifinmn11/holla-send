@@ -43,6 +43,8 @@ internal abstract class RepoModule {
     @Dashboard
     abstract fun bindRepositoryGetDashboard(repositoryImpl: DashboardRepositoryImpl): DashboardRepository
 
-
+    @Binds
+    @History
+    abstract fun bindRepositoryGetHistory(repositoryImpl: HistoryRepositoryImpl): HistoryRepository
 }
 

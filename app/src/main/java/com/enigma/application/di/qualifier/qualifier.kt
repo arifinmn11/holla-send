@@ -40,3 +40,8 @@ annotation class CourierActivity
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class Dashboard
+
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class History
