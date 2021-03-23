@@ -61,8 +61,6 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding.apply {
-            permissionGps()
-
             refreshProfile.setOnRefreshListener {
                 viewModel.profileApi().observe(requireActivity()) { res ->
                     alertDialog.show()
@@ -146,15 +144,6 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
-    fun permissionGps() {
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) GlobalScope.launch(Dispatchers.IO) {
-            } else {
-                Log.d("RECONFIG", "CPONFIG")
-            }
-        }.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
-    }
-
     fun initViewModel() {
         viewModel = ViewModelProvider(this).get(ViewModelProfile::class.java)
         activityViewModel = ViewModelProvider(requireActivity()).get(ActivityViewModel::class.java)
@@ -164,6 +153,5 @@ class ProfileFragment : Fragment() {
         @JvmStatic
         fun newInstance() = ProfileFragment()
     }
-
 
 }

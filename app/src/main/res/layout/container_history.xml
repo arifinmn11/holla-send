@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/id_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/selected_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/ic_baseline_check_circle_24"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/unselected_card"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/label_priority"
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="-2dp"
+                android:src="@drawable/label_high_priority" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <TextView
+                    android:id="@+id/tvReceiver"
+                    style="@style/TextView.PoppinsNormal16spBlack"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="35dp"
+                    android:text="KCP KANTOR" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_baseline_location_on_24" />
+
+                    <TextView
+                        android:id="@+id/tvAddress"
+                        style="@style/TextView.PoppinsNormal12spBlack"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="10dp"
+                        android:text="Location" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_baseline_date_range_24" />
+
+                    <TextView
+                        android:id="@+id/date_request"
+                        style="@style/TextView.PoppinsNormal12spBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:text="01-02-2020" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/ic_baseline_assignment_ind_24" />
+
+                    <TextView
+                        android:id="@+id/name_user"
+                        style="@style/TextView.PoppinsNormal12spBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Yusinta" />
+
+                    <ImageView
+                        android:id="@+id/label_status"
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_baseline_label_24" />
+
+
+                    <TextView
+                        android:id="@+id/status_task"
+                        style="@style/TextView.PoppinsNormal12spBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginRight="5dp"
+                        android:text="Status"
+                        android:textAlignment="textEnd" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

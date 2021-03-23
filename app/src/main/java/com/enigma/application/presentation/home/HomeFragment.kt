@@ -1,11 +1,15 @@
 package com.enigma.application.presentation.home
 
+import android.Manifest
 import android.content.SharedPreferences
+import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -14,6 +18,9 @@ import com.enigma.application.databinding.FragmentHomeBinding
 import com.enigma.application.presentation.activity.ActivityViewModel
 import com.enigma.application.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -24,6 +31,8 @@ class HomeFragment : Fragment() {
 
     @Inject
     lateinit var sharedPref: SharedPreferences
+
+    private var locationManager: LocationManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +56,9 @@ class HomeFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         binding.apply {
+
+            permissionGps()
+
             activityViewModel.setBottomVisibility(true)
 
             refreshHome.setOnRefreshListener {
@@ -98,6 +110,15 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+    }
+
+    fun permissionGps() {
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) GlobalScope.launch(Dispatchers.IO) {
+            } else {
+                Log.d("RECONFIG", "CPONFIG")
+            }
+        }.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 
     companion object {

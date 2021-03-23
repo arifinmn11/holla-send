@@ -6,8 +6,6 @@ import javax.inject.Inject
 
 
 class HistoryRepositoryImpl @Inject constructor(val historyApi: HistoryApi) : HistoryRepository {
-    override suspend fun getHistory(page: Int?, size: Int?): ResponseHistory =
+    override suspend fun getHistory(page: Int, size: Int): ResponseHistory =
         historyApi.getApiDashboard(page, size)
-
-
 }

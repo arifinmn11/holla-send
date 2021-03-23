@@ -22,14 +22,6 @@ import com.enigma.application.utils.component.LoadingDialog
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.bottom_sheet_dialog.view.*
-import kotlinx.android.synthetic.main.bottom_sheet_dialog.view.button_negative
-import kotlinx.android.synthetic.main.bottom_sheet_dialog.view.button_positive
-import kotlinx.android.synthetic.main.bottom_sheet_dialog.view.text_user
-import kotlinx.android.synthetic.main.bottom_sheet_dialog.view.title_dialog
-import kotlinx.android.synthetic.main.bottom_sheet_done_confirmation.view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -49,6 +41,7 @@ class MyTaskFragment : Fragment() {
         binding = FragmentMyTaskBinding.inflate(layoutInflater)
         initViewModel()
         subscribe()
+        subscribeButton()
     }
 
     override fun onCreateView(
@@ -123,8 +116,8 @@ class MyTaskFragment : Fragment() {
                     }
 
                     button_negative.setOnClickListener {
+                        alertDialog.hide()
                         dialogBuilder.dismiss()
-
                     }
                 }
 
@@ -204,7 +197,7 @@ class MyTaskFragment : Fragment() {
         activityViewModel = ViewModelProvider(requireActivity()).get(ActivityViewModel::class.java)
     }
 
-    fun subscribe() {
+    private fun subscribe() {
         activityViewModel.setBottomVisibility(false)
 
         // Get My Task
@@ -228,6 +221,7 @@ class MyTaskFragment : Fragment() {
                     else -> {
                         binding.apply {
                             buttonStop.visibility = View.GONE
+                            buttonStart.visibility = View.VISIBLE
                             getMyTask()
                         }
 
@@ -236,6 +230,9 @@ class MyTaskFragment : Fragment() {
             }
 
         }
+    }
+
+    private fun subscribeButton() {
         // Live Data on Click Cancel
         viewModel.unAssignTask.observe(requireActivity()) { data ->
             val dialogView =
@@ -260,7 +257,6 @@ class MyTaskFragment : Fragment() {
 
                 button_positive.setOnClickListener {
                     data?.id?.let { id ->
-                        dialogBuilder.dismiss()
                         viewModel.unAssignMyTaskApi(id).observe(requireActivity()) { res ->
                             when (res?.code) {
                                 200 -> {
@@ -269,7 +265,10 @@ class MyTaskFragment : Fragment() {
                                         "Data has been drop!",
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                    getMyTask()
+                                    viewModel.getMyTasksApi().observe(requireActivity()) { data ->
+                                        handleGetApi(data)
+                                    }
+                                    dialogBuilder.dismiss()
                                 }
                                 else -> {
                                     viewModel.getMyTasksApi().observe(requireActivity()) { data ->
@@ -280,6 +279,7 @@ class MyTaskFragment : Fragment() {
                                         "Something wrong, try again!",
                                         Toast.LENGTH_SHORT
                                     ).show()
+                                    dialogBuilder.dismiss()
                                 }
                             }
                         }
@@ -350,10 +350,7 @@ class MyTaskFragment : Fragment() {
                 }
             }
         }
-
-
     }
-
 
     fun handleGetApi(data: ResponseMyTasks?) {
         binding.apply {
