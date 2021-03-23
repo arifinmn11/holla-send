@@ -42,41 +42,6 @@ class MainActivity : AppCompatActivity() {
         initViewModel()
         subscribe()
 
-//        if (intent.extras != null) {
-//            for (key in intent.extras!!.keySet()) {
-//                Log.d(TAG, intent.extras!!.getString(key).toString())
-//            }
-//        }
-
-//        FirebaseInstanceId.getInstance().instanceId
-//            .addOnCompleteListener(OnCompleteListener { task ->
-//
-//                if (!task.isSuccessful) {
-//                    task.exception?.message
-//                    return@OnCompleteListener
-//                }
-//
-//                val token = task.result?.token
-//
-//                if (token != null) {
-//                    Log.d("Token", token)
-//                }
-//
-//            })
-
-
-        //creating notification channel if android version is greater than or equals to oreo
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            val channel = NotificationChannel(
-//                CHANNEL_ID,
-//                CHANNEL_NAME,
-//                NotificationManager.IMPORTANCE_DEFAULT
-//            )
-//            channel.description = CHANNEL_DESC
-//            val manager = getSystemService(NotificationManager::class.java)
-//            manager.createNotificationChannel(channel)
-//        }
-
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         binding.apply {
@@ -130,19 +95,12 @@ class MainActivity : AppCompatActivity() {
                         Log.w("ERROR", getString(R.string.token_error), task.exception)
                         return@OnCompleteListener
                     }
-
                     // Get new Instance ID token
                     val token = task.result?.token
-
                     // Log and toast
                     val msg = getString(R.string.token_prefix, token)
                     Log.d("TAG", msg)
-//                    Toast.makeText(baseContext, msg, Toast.LENGTH_LONG).show()
                 })
-            // [END retrieve_current_token]
-        } else {
-            //You won't be able to send notifications to this device
-//            Log.w("TAG", "Device doesn't have google play services")
         }
     }
 
@@ -154,18 +112,6 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    override fun onStop() {
-        super.onStop()
-//        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-//        LocalBroadcastManager.getInstance(this).registerReceiver(
-//            messageReceiver,
-//            IntentFilter("MyData")
-//        )
-    }
 
     private val messageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent) {
