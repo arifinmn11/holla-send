@@ -1,5 +1,6 @@
 package com.enigma.application.presentation.mytask
 
+import android.location.Location
 import android.util.Log
 import androidx.lifecycle.*
 import com.enigma.application.data.model.courier_activity.get.ResponsePickUp
@@ -27,10 +28,16 @@ class MyTaskViewModel @Inject constructor(
     private var _doneTask = MutableLiveData<DataItem>()
     private var _unAssignTask = MutableLiveData<DataItem>()
     private var _activityId = MutableLiveData<String>()
+    private var _locationGps = MutableLiveData<Location>()
 
     val activityId: LiveData<String>
         get() {
             return _activityId
+        }
+
+    val getLocation: LiveData<Location>
+        get() {
+            return _locationGps
         }
 
     val doneTask: LiveData<DataItem>
@@ -156,6 +163,9 @@ class MyTaskViewModel @Inject constructor(
         }
     }
 
+    fun setLocationGps(location: Location) {
+        _locationGps.postValue(location)
+    }
 
 
     fun setActivityId(id: String) {

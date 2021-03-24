@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -31,8 +33,6 @@ import com.enigma.application.utils.component.LoadingDialog
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.bottom_sheet_dialog.view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
 import javax.inject.Inject
 
 
@@ -45,9 +45,7 @@ class MyTaskFragment : Fragment(), LocationListener {
     lateinit var rvAdapter: MyTaskAdapter
     private val locationPermissionCode = 2
 
-    private var latitude: Double? = null
-    private var longitude: Double? = null
-    private var location: Location? = null
+//    lateinit var location: Location
 
 
     private lateinit var locationManager: LocationManager
@@ -329,7 +327,11 @@ class MyTaskFragment : Fragment(), LocationListener {
         }
 
         // Live Data on Click Done
-        viewModel.doneTask.observe(requireActivity()) { dataItem ->co
+        viewModel.doneTask.observe(requireParentFragment()) { dataItem ->
+
+
+            alertDialog.show()
+            
             val dialogView =
                 LayoutInflater.from(requireContext())
                     .inflate(R.layout.bottom_sheet_dialog, null, false)
@@ -337,17 +339,32 @@ class MyTaskFragment : Fragment(), LocationListener {
             dialogBuilder.setContentView(dialogView)
             dialogBuilder.show()
             dialogView.apply {
-
                 getLocation()
-
-
                 val destination = Location("${dataItem.destination?.name}")
                 destination.latitude = dataItem?.destination?.lat!!
                 destination.longitude = dataItem?.destination?.lon!!
+                button_positive.isEnabled = false
+                button_positive.text = "Loading..."
+                button_positive.setBackgroundColor(resources.getColor(R.color.hintColor))
 
-                Toast.makeText(
-                    requireContext(), "${location?.distanceTo(destination)}", Toast.LENGTH_SHORT
-                ).show()
+                viewModel.getLocation.observe(requireParentFragment()) {
+                    if (it.distanceTo(destination) < 100) {
+                        alertDialog.hide()
+                        button_positive.isEnabled = true
+                        button_positive.text = it.distanceTo(destination).toString()
+                        button_positive.setBackgroundColor(resources.getColor(R.color.primary_700))
+                        button_positive.text = "Done"
+                        validation_location.text = "In Radius"
+
+                    } else {
+                        alertDialog.hide()
+                        validation_location.text = "Out of Radius"
+                        button_positive.isEnabled = false
+                        button_positive.text = "Out of Radius"
+                        button_positive.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.hintColor))
+                    }
+                }
+
 
                 title_dialog.text = "Are you sure to change status to delivered??"
 
@@ -551,9 +568,9 @@ class MyTaskFragment : Fragment(), LocationListener {
     }
 
     override fun onLocationChanged(loc: Location) {
-        latitude = loc.latitude
-        longitude = loc.longitude
-        location = loc
+        if (loc != null) {
+            viewModel.setLocationGps(loc)
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -586,7 +603,7 @@ class MyTaskFragment : Fragment(), LocationListener {
         ) {
             return
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, this)
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10f, this)
     }
 
 }
