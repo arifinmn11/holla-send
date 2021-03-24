@@ -1,7 +1,15 @@
 package com.enigma.application.presentation.mytask
 
+import android.Manifest
+import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -22,15 +31,26 @@ import com.enigma.application.utils.component.LoadingDialog
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.bottom_sheet_dialog.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
 import javax.inject.Inject
 
+
 @AndroidEntryPoint
-class MyTaskFragment : Fragment() {
+class MyTaskFragment : Fragment(), LocationListener {
     private lateinit var binding: FragmentMyTaskBinding
     lateinit var viewModel: MyTaskViewModel
     lateinit var activityViewModel: ActivityViewModel
     lateinit var alertDialog: AlertDialog
     lateinit var rvAdapter: MyTaskAdapter
+    private val locationPermissionCode = 2
+
+    private var latitude: Double? = null
+    private var longitude: Double? = null
+    private var location: Location? = null
+
+
+    private lateinit var locationManager: LocationManager
 
     @Inject
     lateinit var sharedPref: SharedPreferences
@@ -42,6 +62,25 @@ class MyTaskFragment : Fragment() {
         initViewModel()
         subscribe()
         subscribeButton()
+        getLocation()
+    }
+
+    override fun onProviderDisabled(provider: String) {
+        buildAlertMessageNoGps()
+    }
+
+    private fun buildAlertMessageNoGps() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+            .setCancelable(false)
+            .setPositiveButton(
+                "Yes"
+            ) { dialog, id -> startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)) }
+            .setNegativeButton(
+                "No"
+            ) { dialog, id -> dialog.cancel() }
+        val alert = builder.create()
+        alert.show()
     }
 
     override fun onCreateView(
@@ -63,9 +102,7 @@ class MyTaskFragment : Fragment() {
             refreshNewTask.setOnRefreshListener {
                 alertDialog.show()
                 getActivityApi()
-
             }
-
 
             val callback: OnBackPressedCallback =
                 object : OnBackPressedCallback(true /* enabled by default */) {
@@ -290,8 +327,9 @@ class MyTaskFragment : Fragment() {
                 }
             }
         }
+
         // Live Data on Click Done
-        viewModel.doneTask.observe(requireActivity()) { dataItem ->
+        viewModel.doneTask.observe(requireActivity()) { dataItem ->co
             val dialogView =
                 LayoutInflater.from(requireContext())
                     .inflate(R.layout.bottom_sheet_dialog, null, false)
@@ -299,15 +337,29 @@ class MyTaskFragment : Fragment() {
             dialogBuilder.setContentView(dialogView)
             dialogBuilder.show()
             dialogView.apply {
+
+                getLocation()
+
+
+                val destination = Location("${dataItem.destination?.name}")
+                destination.latitude = dataItem?.destination?.lat!!
+                destination.longitude = dataItem?.destination?.lon!!
+
+                Toast.makeText(
+                    requireContext(), "${location?.distanceTo(destination)}", Toast.LENGTH_SHORT
+                ).show()
+
                 title_dialog.text = "Are you sure to change status to delivered??"
 
                 dataItem.destination?.apply {
                     text_receiver.text = this?.name ?: ""
                     text_location.text = this?.address ?: ""
                 }
+
                 dataItem.requestBy?.userDetails.apply {
                     text_user.text = "${this?.firstName} ${this?.lastName}"
                 }
+
                 dataItem.createDate.apply {
                     text_date.text = this?.substring(0, 10)
                 }
@@ -497,4 +549,44 @@ class MyTaskFragment : Fragment() {
         @JvmStatic
         fun newInstance() = MyTaskFragment()
     }
+
+    override fun onLocationChanged(loc: Location) {
+        latitude = loc.latitude
+        longitude = loc.longitude
+        location = loc
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == locationPermissionCode) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(requireActivity(), "Permission Granted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireActivity(), "Permission Denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun getLocation() {
+        locationManager =
+            (requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager)!!
+
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, this)
+    }
+
 }

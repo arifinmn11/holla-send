@@ -1,20 +1,14 @@
 package com.enigma.application.presentation.activity
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.*
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
 import com.enigma.application.R
 import com.enigma.application.databinding.ActivityMainBinding
-import com.enigma.application.presentation.activity.NotificationHelper.CHANNEL_ID
 import com.enigma.application.presentation.activity.NotificationHelper.displayNotification
 import com.enigma.application.utils.Constants.Companion.MENU_HISTORY
 import com.enigma.application.utils.Constants.Companion.MENU_HOME
@@ -23,7 +17,6 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import javax.inject.Inject
