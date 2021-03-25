@@ -2,14 +2,12 @@ package com.enigma.application.presentation.mytask
 
 import android.Manifest
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +16,6 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -28,9 +25,9 @@ import com.enigma.application.data.model.mytask.DataItem
 import com.enigma.application.data.model.mytask.ResponseMyTasks
 import com.enigma.application.databinding.FragmentMyTaskBinding
 import com.enigma.application.presentation.activity.ActivityViewModel
+import com.enigma.application.utils.GpsUtils
 import com.enigma.application.utils.component.LoadingDialog
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.bottom_sheet_dialog.view.*
@@ -38,15 +35,24 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-open class MyTaskFragment : Fragment() {
+class MyTaskFragment : Fragment() {
     private lateinit var binding: FragmentMyTaskBinding
     lateinit var viewModel: MyTaskViewModel
     lateinit var activityViewModel: ActivityViewModel
     lateinit var alertDialog: AlertDialog
     lateinit var rvAdapter: MyTaskAdapter
+
     private val locationPermissionCode = 2
 
 
+    private var wayLatitude: Double = 0.0
+    private var wayLongitude: Double = 0.0
+    private var isContinue = true
+    private var isGPS = false
+
+
+    lateinit var locationRequest: LocationRequest
+    lateinit var locationCallback: LocationCallback
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
 
@@ -57,25 +63,46 @@ open class MyTaskFragment : Fragment() {
         super.onCreate(savedInstanceState)
         alertDialog = LoadingDialog.build(requireContext())
         binding = FragmentMyTaskBinding.inflate(layoutInflater)
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
+        locationRequest = LocationRequest.create()
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+        locationRequest.setInterval(10000L)
+        locationRequest.setFastestInterval(5000L)
+
+        buildAlertMessageNoGps()
         initViewModel()
+        updateLocation()
         subscribe()
         subscribeButton()
     }
 
     private fun buildAlertMessageNoGps() {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
-            .setCancelable(false)
-            .setPositiveButton(
-                "Yes"
-            ) { dialog, id -> startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)) }
-            .setNegativeButton(
-                "No"
-            ) { dialog, id -> dialog.cancel() }
-        val alert = builder.create()
-        alert.show()
+        GpsUtils(requireActivity()).turnGPSOn(object : GpsUtils.onGpsListener {
+            override fun gpsStatus(isGPSEnable: Boolean) {
+                // turn on GPS
+                isGPS = isGPSEnable
+            }
+        })
+    }
+
+    private fun updateLocation() {
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                for (location in locationResult.locations) {
+                    if (location != null) {
+                        if (isContinue) {
+                            viewModel.setLocationGps(location)
+                        }
+                        if (!isContinue && fusedLocationClient != null) {
+                            fusedLocationClient.removeLocationUpdates(locationCallback)
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     override fun onCreateView(
@@ -103,6 +130,7 @@ open class MyTaskFragment : Fragment() {
                 object : OnBackPressedCallback(true /* enabled by default */) {
                     override fun handleOnBackPressed() {
                         // Handle the back button event
+                        isContinue = false
                         findNavController().navigate(R.id.action_global_homeFragment)
                     }
                 }
@@ -340,12 +368,14 @@ open class MyTaskFragment : Fragment() {
                 button_positive.isEnabled = false
                 button_positive.text = "Loading..."
                 button_positive.setBackgroundColor(resources.getColor(R.color.hintColor))
+
                 viewModel.getLocation.observe(requireActivity()) {
                     if (it.distanceTo(destination) < 100) {
                         alertDialog.hide()
                         button_positive.isEnabled = true
                         button_positive.text = it.distanceTo(destination).toString()
-                        button_positive.setBackgroundColor(resources.getColor(R.color.primary_700))
+                        button_positive.backgroundTintList =
+                            ColorStateList.valueOf(resources.getColor(R.color.primary_700))
                         button_positive.text = "Done"
                         validation_location.text = "In Radius"
 
@@ -579,27 +609,35 @@ open class MyTaskFragment : Fragment() {
 
         try {
             if (isLocationEnabled()) {
-                fusedLocationClient.lastLocation
-                    .addOnSuccessListener { location ->
+                if (isContinue) {
+                    fusedLocationClient.requestLocationUpdates(
+                        locationRequest,
+                        locationCallback,
+                        null
+                    )
+                } else {
+                    fusedLocationClient.lastLocation
+                        .addOnSuccessListener { location ->
 
-                        // getting the last known or current location
-                        if (location != null) {
-                            latitude = location.latitude
-                            longitude = location.longitude
-                            viewModel.setLocationGps(location)
+                            // getting the last known or current location
+                            if (location != null) {
+                                latitude = location.latitude
+                                longitude = location.longitude
+//                                viewModel.setLocationGps(location)
+                            }
+
+                            Toast.makeText(
+                                requireContext(), "$latitude | $longitude",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-
-                        Toast.makeText(
-                            requireContext(), "$latitude | $longitude",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(
-                            requireContext(), "Failed on getting current location",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                        .addOnFailureListener {
+                            Toast.makeText(
+                                requireContext(), "Failed on getting current location",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                }
             } else {
                 buildAlertMessageNoGps()
             }
@@ -615,15 +653,6 @@ open class MyTaskFragment : Fragment() {
         return locationManager!!.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
-    companion object {
-        private const val LOCATION_PERMISSION_REQ_CODE = 1000
-
-        private var latitude: Double = 0.0
-        private var longitude: Double = 0.0
-
-        @JvmStatic
-        fun newInstance() = MyTaskFragment()
-    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<out String>, grantResults: IntArray
@@ -643,5 +672,15 @@ open class MyTaskFragment : Fragment() {
                 }
             }
         }
+    }
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQ_CODE = 1000
+
+        private var latitude: Double = 0.0
+        private var longitude: Double = 0.0
+
+        @JvmStatic
+        fun newInstance() = MyTaskFragment()
     }
 }
