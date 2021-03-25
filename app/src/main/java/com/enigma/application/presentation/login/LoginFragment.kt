@@ -99,7 +99,7 @@ class LoginFragment : Fragment() {
 
                     viewModel.postAuth(RequestAuth(username = username, password = password))
                         .observe(requireActivity()) { response ->
-                            loadingDialog.show()
+                            loadingDialog.hide()
 
                             when (response?.code) {
                                 200 -> {

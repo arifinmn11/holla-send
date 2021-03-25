@@ -1,5 +1,6 @@
 package com.enigma.application.presentation.activity
 
+import android.location.Location
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

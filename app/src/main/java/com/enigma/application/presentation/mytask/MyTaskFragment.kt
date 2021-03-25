@@ -6,9 +6,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
@@ -20,6 +18,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -30,6 +29,8 @@ import com.enigma.application.data.model.mytask.ResponseMyTasks
 import com.enigma.application.databinding.FragmentMyTaskBinding
 import com.enigma.application.presentation.activity.ActivityViewModel
 import com.enigma.application.utils.component.LoadingDialog
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.bottom_sheet_dialog.view.*
@@ -37,7 +38,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MyTaskFragment : Fragment(), LocationListener {
+open class MyTaskFragment : Fragment() {
     private lateinit var binding: FragmentMyTaskBinding
     lateinit var viewModel: MyTaskViewModel
     lateinit var activityViewModel: ActivityViewModel
@@ -45,10 +46,9 @@ class MyTaskFragment : Fragment(), LocationListener {
     lateinit var rvAdapter: MyTaskAdapter
     private val locationPermissionCode = 2
 
-//    lateinit var location: Location
 
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private lateinit var locationManager: LocationManager
 
     @Inject
     lateinit var sharedPref: SharedPreferences
@@ -57,14 +57,11 @@ class MyTaskFragment : Fragment(), LocationListener {
         super.onCreate(savedInstanceState)
         alertDialog = LoadingDialog.build(requireContext())
         binding = FragmentMyTaskBinding.inflate(layoutInflater)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
         initViewModel()
         subscribe()
         subscribeButton()
-        getLocation()
-    }
-
-    override fun onProviderDisabled(provider: String) {
-        buildAlertMessageNoGps()
     }
 
     private fun buildAlertMessageNoGps() {
@@ -328,10 +325,8 @@ class MyTaskFragment : Fragment(), LocationListener {
 
         // Live Data on Click Done
         viewModel.doneTask.observe(requireParentFragment()) { dataItem ->
-
-
+            getCurrentLocation()
             alertDialog.show()
-            
             val dialogView =
                 LayoutInflater.from(requireContext())
                     .inflate(R.layout.bottom_sheet_dialog, null, false)
@@ -339,15 +334,13 @@ class MyTaskFragment : Fragment(), LocationListener {
             dialogBuilder.setContentView(dialogView)
             dialogBuilder.show()
             dialogView.apply {
-                getLocation()
                 val destination = Location("${dataItem.destination?.name}")
                 destination.latitude = dataItem?.destination?.lat!!
                 destination.longitude = dataItem?.destination?.lon!!
                 button_positive.isEnabled = false
                 button_positive.text = "Loading..."
                 button_positive.setBackgroundColor(resources.getColor(R.color.hintColor))
-
-                viewModel.getLocation.observe(requireParentFragment()) {
+                viewModel.getLocation.observe(requireActivity()) {
                     if (it.distanceTo(destination) < 100) {
                         alertDialog.hide()
                         button_positive.isEnabled = true
@@ -358,13 +351,18 @@ class MyTaskFragment : Fragment(), LocationListener {
 
                     } else {
                         alertDialog.hide()
-                        validation_location.text = "Out of Radius"
+                        validation_location.text =
+                            "Out of Radius (Distance to location %.2f km)".format(
+                                it.distanceTo(
+                                    destination
+                                ) / 1000
+                            )
                         button_positive.isEnabled = false
                         button_positive.text = "Out of Radius"
-                        button_positive.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.hintColor))
+                        button_positive.backgroundTintList =
+                            ColorStateList.valueOf(resources.getColor(R.color.hintColor))
                     }
                 }
-
 
                 title_dialog.text = "Are you sure to change status to delivered??"
 
@@ -562,48 +560,88 @@ class MyTaskFragment : Fragment(), LocationListener {
         }
     }
 
+    private fun getCurrentLocation() {
+        // checking location permission
+        if (ActivityCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+
+            // request permission
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQ_CODE
+            );
+            return
+        }
+
+
+        try {
+            if (isLocationEnabled()) {
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location ->
+
+                        // getting the last known or current location
+                        if (location != null) {
+                            latitude = location.latitude
+                            longitude = location.longitude
+                            viewModel.setLocationGps(location)
+                        }
+
+                        Toast.makeText(
+                            requireContext(), "$latitude | $longitude",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(
+                            requireContext(), "Failed on getting current location",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+            } else {
+                buildAlertMessageNoGps()
+            }
+        } catch (e: Exception) {
+        }
+    }
+
+    private var locationManager: LocationManager? = null
+
+    protected fun isLocationEnabled(): Boolean {
+        locationManager =
+            (requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager)!!
+        return locationManager!!.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
+
     companion object {
+        private const val LOCATION_PERMISSION_REQ_CODE = 1000
+
+        private var latitude: Double = 0.0
+        private var longitude: Double = 0.0
+
         @JvmStatic
         fun newInstance() = MyTaskFragment()
     }
 
-    override fun onLocationChanged(loc: Location) {
-        if (loc != null) {
-            viewModel.setLocationGps(loc)
-        }
-    }
-
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
-        if (requestCode == locationPermissionCode) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(requireActivity(), "Permission Granted", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(requireActivity(), "Permission Denied", Toast.LENGTH_SHORT).show()
+        when (requestCode) {
+            LOCATION_PERMISSION_REQ_CODE -> {
+                if (grantResults.isNotEmpty() &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED
+                ) {
+                    // permission granted
+                } else {
+                    // permission denied
+                    Toast.makeText(
+                        requireContext(), "You need to grant permission to access location",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
     }
-
-    private fun getLocation() {
-        locationManager =
-            (requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager)!!
-
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-            != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10f, this)
-    }
-
 }

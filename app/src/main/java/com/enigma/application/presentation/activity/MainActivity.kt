@@ -1,9 +1,14 @@
 package com.enigma.application.presentation.activity
 
+import android.Manifest
 import android.content.*
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
@@ -15,6 +20,8 @@ import com.enigma.application.utils.Constants.Companion.MENU_HOME
 import com.enigma.application.utils.Constants.Companion.MENU_PROFILE
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,7 +41,6 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
         initViewModel()
         subscribe()
-
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         binding.apply {
@@ -62,6 +68,7 @@ class MainActivity : AppCompatActivity() {
         }
         setContentView(binding.root)
     }
+
 
     private fun initViewModel() {
         viewModel = ViewModelProvider(this).get(ActivityViewModel::class.java)
@@ -127,11 +134,13 @@ class MainActivity : AppCompatActivity() {
         return status == ConnectionResult.SUCCESS
     }
 
+
     companion object {
         var TAG = "ACTIVITY NOFITICATION"
         const val CHANNEL_ID = "CHANNEL"
         private const val CHANNEL_NAME = "Simplified Coding"
         private const val CHANNEL_DESC = "Android Push Notification Tutorial"
+                ;
 
     }
 }
