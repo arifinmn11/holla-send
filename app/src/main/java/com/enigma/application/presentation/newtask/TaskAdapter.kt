@@ -10,7 +10,6 @@ class TaskAdapter(val onClickListener: TaskOnClickListener) :
     RecyclerView.Adapter<TaskViewHolder>() {
     var tasks = ArrayList<DataItem>()
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val v = inflater.inflate(R.layout.container_new_task, parent, false)
@@ -22,7 +21,6 @@ class TaskAdapter(val onClickListener: TaskOnClickListener) :
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = tasks[position]
         holder.bind(task)
-
     }
 
     fun setView(data: List<DataItem>) {

@@ -25,7 +25,7 @@ import com.enigma.application.data.model.mytask.DataItem
 import com.enigma.application.data.model.mytask.ResponseMyTasks
 import com.enigma.application.databinding.FragmentMyTaskBinding
 import com.enigma.application.presentation.activity.ActivityViewModel
-import com.enigma.application.utils.GpsUtils
+import com.enigma.application.utils.component.GpsUtils
 import com.enigma.application.utils.component.LoadingDialog
 import com.google.android.gms.location.*
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -41,12 +41,10 @@ class MyTaskFragment : Fragment() {
     lateinit var activityViewModel: ActivityViewModel
     lateinit var alertDialog: AlertDialog
     lateinit var rvAdapter: MyTaskAdapter
+    private val LOCATION_PERMISSION_REQ_CODE = 1000
 
-    private val locationPermissionCode = 2
-
-
-    private var wayLatitude: Double = 0.0
-    private var wayLongitude: Double = 0.0
+    private var latitude: Double = 0.0
+    private var longitude: Double = 0.0
     private var isContinue = true
     private var isGPS = false
 
@@ -248,7 +246,6 @@ class MyTaskFragment : Fragment() {
                 findNavController().navigate(R.id.action_global_homeFragment)
             }
         }
-
         return binding.root
     }
 
@@ -623,7 +620,6 @@ class MyTaskFragment : Fragment() {
                             if (location != null) {
                                 latitude = location.latitude
                                 longitude = location.longitude
-//                                viewModel.setLocationGps(location)
                             }
 
                             Toast.makeText(
@@ -642,6 +638,11 @@ class MyTaskFragment : Fragment() {
                 buildAlertMessageNoGps()
             }
         } catch (e: Exception) {
+            Toast.makeText(
+                requireActivity(),
+                "Something wrong, make sure your Gps is active!",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -675,11 +676,6 @@ class MyTaskFragment : Fragment() {
     }
 
     companion object {
-        private const val LOCATION_PERMISSION_REQ_CODE = 1000
-
-        private var latitude: Double = 0.0
-        private var longitude: Double = 0.0
-
         @JvmStatic
         fun newInstance() = MyTaskFragment()
     }

@@ -112,7 +112,6 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-
     private val messageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent) {
             Log.d(
@@ -128,19 +127,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun checkGooglePlayServices(): Boolean {
         val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
         return status == ConnectionResult.SUCCESS
     }
 
-
-    companion object {
-        var TAG = "ACTIVITY NOFITICATION"
-        const val CHANNEL_ID = "CHANNEL"
-        private const val CHANNEL_NAME = "Simplified Coding"
-        private const val CHANNEL_DESC = "Android Push Notification Tutorial"
-                ;
-
-    }
 }

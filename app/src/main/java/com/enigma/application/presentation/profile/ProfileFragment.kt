@@ -74,7 +74,6 @@ class ProfileFragment : Fragment() {
                                 usernameProfile.text =
                                     "@${res?.data?.username}"
                             }
-
                             401 -> {
                                 refreshProfile.isRefreshing = false
                                 alertDialog.hide()
@@ -132,15 +131,12 @@ class ProfileFragment : Fragment() {
                     button_negative.setOnClickListener {
                         dialogBuilder.dismiss()
                     }
-
                 }
-
             }
 
             nameProfile.text = "$firstName $lastname"
             usernameProfile.text = "@$username"
         }
-
         return binding.root
     }
 

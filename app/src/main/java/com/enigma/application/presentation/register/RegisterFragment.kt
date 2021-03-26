@@ -1,5 +1,6 @@
 package com.enigma.application.presentation.register
 
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,7 +19,16 @@ import com.enigma.application.data.model.register.RequestRegister
 import com.enigma.application.data.model.register.User
 import com.enigma.application.data.model.register.UserDetails
 import com.enigma.application.databinding.FragmentRegisterBinding
-import com.enigma.application.utils.Constants
+import com.enigma.application.utils.Constants.Companion.VALIDATION_ADDRESS
+import com.enigma.application.utils.Constants.Companion.VALIDATION_CONFIRM_PASSWORD
+import com.enigma.application.utils.Constants.Companion.VALIDATION_EMAIL
+import com.enigma.application.utils.Constants.Companion.VALIDATION_FIRSTNAME
+import com.enigma.application.utils.Constants.Companion.VALIDATION_IDENTIFICATION
+import com.enigma.application.utils.Constants.Companion.VALIDATION_LASTNAME
+import com.enigma.application.utils.Constants.Companion.VALIDATION_NO_IDENTIFICATION
+import com.enigma.application.utils.Constants.Companion.VALIDATION_PASSWORD
+import com.enigma.application.utils.Constants.Companion.VALIDATION_SUCCESS
+import com.enigma.application.utils.Constants.Companion.VALIDATION_USERNAME
 import com.enigma.application.utils.component.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_register.*
@@ -57,7 +67,6 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         binding.apply {
-
             loginText.setOnClickListener {
                 findNavController().navigate(R.id.action_global_loginFragment)
             }
@@ -108,8 +117,9 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
         viewModel = ViewModelProvider(this).get(RegisterViewModel::class.java)
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     fun subscribe() {
-        viewModel.getValidation().observe(this) {
+        viewModel.getValidation().observe(this) { res ->
             etUsername.background = resources.getDrawable(R.drawable.radius_edit_text)
             etEmail.background = resources.getDrawable(R.drawable.radius_edit_text)
             etPassword.background = resources.getDrawable(R.drawable.radius_edit_text)
@@ -119,13 +129,11 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
             etIdentificationNumber.background = resources.getDrawable(R.drawable.radius_edit_text)
             etContact.background = resources.getDrawable(R.drawable.radius_edit_text)
 
-            when (it.status) {
-                Constants.VALIDATION_SUCCESS -> {
+            when (res.status) {
+                VALIDATION_SUCCESS -> {
                     loadingDialog.show()
                     registration?.let { register ->
                         viewModel.postRegister(register).observe(this) {
-
-
                             when (it?.code) {
                                 200 -> {
                                     loadingDialog.hide()
@@ -152,43 +160,51 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
                         }
                     }
                 }
-                Constants.VALIDATION_USERNAME -> {
+
+                VALIDATION_USERNAME -> {
+                    Toast.makeText(requireContext(), res.message, Toast.LENGTH_SHORT).show()
                     etUsername.background = resources.getDrawable(R.drawable.error_edit_text)
                 }
-                Constants.VALIDATION_EMAIL -> {
+                VALIDATION_EMAIL -> {
+                    Toast.makeText(requireContext(), res.message, Toast.LENGTH_SHORT).show()
                     etEmail.background = resources.getDrawable(R.drawable.error_edit_text)
                 }
-                Constants.VALIDATION_PASSWORD -> {
+                VALIDATION_PASSWORD -> {
+                    Toast.makeText(requireContext(), res.message, Toast.LENGTH_SHORT).show()
                     etPassword.background = resources.getDrawable(R.drawable.error_edit_text)
                 }
-                Constants.VALIDATION_CONFIRM_PASSWORD -> {
+                VALIDATION_CONFIRM_PASSWORD -> {
+                    Toast.makeText(requireContext(), res.message, Toast.LENGTH_SHORT).show()
                     etPasswordConfirm.background = resources.getDrawable(R.drawable.error_edit_text)
                 }
-                Constants.VALIDATION_FIRSTNAME -> {
+                VALIDATION_FIRSTNAME -> {
+                    Toast.makeText(requireContext(), res.message, Toast.LENGTH_SHORT).show()
                     etFirstName.background = resources.getDrawable(R.drawable.error_edit_text)
                 }
-                Constants.VALIDATION_LASTNAME -> {
+                VALIDATION_LASTNAME -> {
+                    Toast.makeText(requireContext(), res.message, Toast.LENGTH_SHORT).show()
                     etLastName.background = resources.getDrawable(R.drawable.error_edit_text)
                 }
-                Constants.VALIDATION_IDENTIFICATION -> {
+                VALIDATION_IDENTIFICATION -> {
+                    Toast.makeText(requireContext(), res.message, Toast.LENGTH_SHORT).show()
                     spinnerIdentity.background = resources.getDrawable(R.drawable.error_edit_text)
                 }
-                Constants.VALIDATION_NO_IDENTIFICATION -> {
+                VALIDATION_NO_IDENTIFICATION -> {
+                    Toast.makeText(requireContext(), res.message, Toast.LENGTH_SHORT).show()
                     etIdentificationNumber.background =
                         resources.getDrawable(R.drawable.error_edit_text)
                 }
-                Constants.VALIDATION_ADDRESS -> {
+                VALIDATION_ADDRESS -> {
+                    Toast.makeText(requireContext(), res.message, Toast.LENGTH_SHORT).show()
                     etContact.background = resources.getDrawable(R.drawable.error_edit_text)
                 }
             }
-
         }
     }
 
     companion object {
         fun newInstance() = RegisterFragment()
     }
-
 
     // alert dialog
     private fun dialog() {
@@ -200,9 +216,7 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
             })
             .setCancelable(false)
             .show()
-
     }
-
 
     // Spinner
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {

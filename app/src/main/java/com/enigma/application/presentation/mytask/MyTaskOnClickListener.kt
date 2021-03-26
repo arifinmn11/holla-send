@@ -6,5 +6,4 @@ interface MyTaskOnClickListener {
     fun onClickUnAssign(id: DataItem)
     fun onClickDone(id: DataItem)
     fun onClickDetail(id: DataItem)
-
 }

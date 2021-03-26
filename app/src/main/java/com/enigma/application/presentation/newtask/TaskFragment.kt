@@ -64,10 +64,6 @@ class TaskFragment : Fragment() {
                 }
             }
 
-            btnAddTask.setOnClickListener {
-//                viewModel.getData()
-            }
-
             val callback: OnBackPressedCallback =
                 object : OnBackPressedCallback(true /* enabled by default */) {
                     override fun handleOnBackPressed() {
@@ -93,7 +89,7 @@ class TaskFragment : Fragment() {
         activityViewModel.setBottomVisibility(false)
         viewModel.getTaskSelected.observe(this) {
             binding.apply {
-                if (it.size > 0) {
+                if (it.isNotEmpty()) {
                     selectedTask.text = it.size.toString()
                     selectedTask.visibility = View.VISIBLE
                     refreshNewTask.setPadding(0, 0, 0, 140)
@@ -130,10 +126,8 @@ class TaskFragment : Fragment() {
                             requireContext(),
                             "Something wrong, Please check your connection or data has been assign by other courier",
                             Toast.LENGTH_SHORT
-                        )
-                            .show()
+                        ).show()
                     }
-
                     else -> {
                         alertDialog.hide()
                         Toast.makeText(
@@ -150,13 +144,13 @@ class TaskFragment : Fragment() {
             data?.code.apply {
                 when (this) {
                     200 -> data?.data.apply {
-                        Log.d("DATAS", "$this")
+
                         pageWarning(status = false)
                         refreshNewTask.isRefreshing = false
                         alertDialog.hide()
                         rvAdapter.setView(this as List<DataItem>)
 
-                        if (this.size == 0)
+                        if (this.isEmpty())
                             pageWarning(true, 200)
 
                     }
@@ -185,10 +179,6 @@ class TaskFragment : Fragment() {
         }
     }
 
-    fun handlePutApi(id: String) {
-
-    }
-
     fun pageWarning(status: Boolean, error: Int? = 0) {
         binding.apply {
 
@@ -206,7 +196,7 @@ class TaskFragment : Fragment() {
                 404 -> {
                     rvAdapter.setView(clearData)
                     logoAlert.setImageResource(R.drawable.ic_undraw_authentication_fsn5)
-                    messageAlert.text = "Please relogin, your token is expired!"
+                    messageAlert.text = "Please re-login, your token is expired!"
                 }
 
                 200 -> {
@@ -220,7 +210,6 @@ class TaskFragment : Fragment() {
                     messageAlert.text = "No Internet Connection!"
                 }
             }
-
         }
     }
 

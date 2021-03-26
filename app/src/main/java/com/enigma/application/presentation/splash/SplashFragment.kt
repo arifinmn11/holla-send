@@ -44,9 +44,9 @@ class SplashFragment : Fragment() {
     }
 
     fun subscribe() {
-        viewModel.checkToken().observe(this) {
+        viewModel.checkToken().observe(this) { res ->
             activityViewModel.setBottomVisibility(false)
-            when (it?.code) {
+            when (res?.code) {
                 200 -> {
                     activityViewModel.setBottomVisibility(true)
                     findNavController().navigate(R.id.action_global_homeFragment)

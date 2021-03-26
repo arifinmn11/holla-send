@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(@PostRegistration val repository: RegistrationRepository) :
     ViewModel() {
-    val _liveValidation: MutableLiveData<ResponseValidation> = MutableLiveData()
+    private val _liveValidation: MutableLiveData<ResponseValidation> = MutableLiveData()
 
     fun getValidation(): LiveData<ResponseValidation> {
         return _liveValidation
@@ -56,12 +56,12 @@ class RegisterViewModel @Inject constructor(@PostRegistration val repository: Re
     ) {
         var validation = ResponseValidation("", "")
         if (!email.validEmail()) {
-            validation.message = "Emial is not Valid"
+            validation.message = "Email is not Valid"
             validation.status = Constants.VALIDATION_EMAIL
-        } else if (username.length < 6 && username.length > 12) {
+        } else if (username.length in 13 downTo 5) {
             validation.message = "Password is not Valid min 6 character"
             validation.status = Constants.VALIDATION_USERNAME
-        } else if (password.length < 6 && username.length > 20) {
+        } else if (password.length in 21 downTo 5) {
             validation.message = "Password is not Valid min 6 character"
             validation.status = Constants.VALIDATION_PASSWORD
         } else if (password != confirmPassword) {

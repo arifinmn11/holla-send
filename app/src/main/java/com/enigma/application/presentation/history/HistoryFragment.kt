@@ -3,12 +3,12 @@ package com.enigma.application.presentation.history
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +16,6 @@ import com.enigma.application.R
 import com.enigma.application.data.model.history.ListItem
 import com.enigma.application.databinding.FragmentHistoryBinding
 import com.enigma.application.presentation.activity.ActivityViewModel
-import com.enigma.application.presentation.mytask.MyTaskAdapter
 import com.enigma.application.utils.Constants
 import com.enigma.application.utils.component.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,16 +25,15 @@ import kotlin.math.roundToInt
 @AndroidEntryPoint
 class HistoryFragment : Fragment() {
     private lateinit var binding: FragmentHistoryBinding
-    lateinit var viewModel: HistoryViewModel
-    lateinit var activityViewModel: ActivityViewModel
-    lateinit var rvAdapter: HistoryAdapter
-    lateinit var alertDialog: AlertDialog
+    private lateinit var viewModel: HistoryViewModel
+    private lateinit var activityViewModel: ActivityViewModel
+    private lateinit var rvAdapter: HistoryAdapter
+    private lateinit var alertDialog: AlertDialog
 
     @Inject
     lateinit var sharedPref: SharedPreferences
 
     private var page = 1;
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,14 +51,12 @@ class HistoryFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding.apply {
-
             historySubscribe(page)
 
             refreshNewTask.setOnRefreshListener {
                 historySubscribe(page)
             }
 
-//            activityViewModel.setBottomVisibility(false)
             rvAdapter = HistoryAdapter(viewModel)
             myHistoryList.apply {
                 layoutManager = LinearLayoutManager(requireContext())
@@ -76,6 +72,14 @@ class HistoryFragment : Fragment() {
                 viewModel.onPrevPage()
             }
 
+            val callback: OnBackPressedCallback =
+                object : OnBackPressedCallback(true /* enabled by default */) {
+                    override fun handleOnBackPressed() {
+                        // Handle the back button event
+                        findNavController().navigate(R.id.action_global_homeFragment)
+                    }
+                }
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         }
 
         return binding.root
@@ -115,36 +119,28 @@ class HistoryFragment : Fragment() {
 
                                 if (size < total) {
                                     buttonNext.isEnabled = true
-                                    buttonNext.setBackgroundTintList(
-                                        ColorStateList.valueOf(
-                                            resources.getColor(R.color.white)
-                                        )
-                                    );
-
+                                    buttonNext.backgroundTintList = ColorStateList.valueOf(
+                                        resources.getColor(R.color.white)
+                                    )
                                 } else {
                                     buttonNext.isEnabled = false
-                                    buttonNext.setBackgroundTintList(
-                                        ColorStateList.valueOf(
-                                            resources.getColor(R.color.hintColor)
-                                        )
-                                    );
+                                    buttonNext.backgroundTintList = ColorStateList.valueOf(
+                                        resources.getColor(R.color.hintColor)
+                                    )
                                 }
 
                                 if (page > 1) {
                                     buttonForward.isEnabled = true
-                                    buttonForward.setBackgroundTintList(
-                                        ColorStateList.valueOf(
-                                            resources.getColor(R.color.white)
-                                        )
+                                    buttonForward.backgroundTintList = ColorStateList.valueOf(
+                                        resources.getColor(R.color.white)
                                     )
                                 } else {
                                     buttonForward.isEnabled = false
-                                    buttonForward.setBackgroundTintList(
-                                        ColorStateList.valueOf(
-                                            resources.getColor(R.color.hintColor)
-                                        )
+                                    buttonForward.backgroundTintList = ColorStateList.valueOf(
+                                        resources.getColor(R.color.hintColor)
                                     )
                                 }
+
                             }
                         }
                     }
@@ -160,12 +156,7 @@ class HistoryFragment : Fragment() {
                     else -> {
                         binding.apply {
                             refreshNewTask.isRefreshing = false
-                            sharedPref.edit()
-                                .putString(Constants.TOKEN, "")
-                                .apply()
-                            findNavController().navigate(R.id.action_global_loginFragment)
                         }
-
                     }
                 }
             }

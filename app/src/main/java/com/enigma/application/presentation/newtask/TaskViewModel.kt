@@ -12,15 +12,11 @@ import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
 @HiltViewModel
-class TaskViewModel @Inject constructor(
-    @PutAddToMyTask
-    val repository: NewTaskRepository
-) :
+class TaskViewModel @Inject constructor(@PutAddToMyTask val repository: NewTaskRepository) :
     ViewModel(), TaskOnClickListener {
+
     private var listSelected = mutableListOf<String>()
-
     private var _selectedTasks = MutableLiveData<List<String>>()
-
     private var _listenAdd = MutableLiveData<String>()
 
     val getTaskSelected: LiveData<List<String>>
@@ -47,9 +43,6 @@ class TaskViewModel @Inject constructor(
         _listenAdd.postValue(data)
     }
 
-    fun getData() {
-        getTaskSelected.value?.let { Log.d("DATA : ", "$it") }
-    }
 
     private fun unSelectedTask(data: String) {
         val index = listSelected.indexOf(data)
@@ -59,12 +52,7 @@ class TaskViewModel @Inject constructor(
         }
     }
 
-    // handle refresh : clear selected item
-    fun refreshHandle() {
-        listSelected = mutableListOf<String>()
-    }
-
-    //     handle click : send task
+    // handle click : send task
     fun sendToMyTaskApi(id: String) =
         liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
             withTimeout(5000) {

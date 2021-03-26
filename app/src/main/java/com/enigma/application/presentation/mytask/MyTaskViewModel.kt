@@ -180,7 +180,6 @@ class MyTaskViewModel @Inject constructor(
         _doneTask.postValue(data)
     }
 
-
     override fun onClickUnAssign(data: DataItem) {
         setUnAssign(data)
     }

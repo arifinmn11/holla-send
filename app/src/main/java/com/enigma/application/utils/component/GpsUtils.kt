@@ -1,4 +1,4 @@
-package com.enigma.application.utils
+package com.enigma.application.utils.component
 
 import android.app.Activity
 import android.content.ContentValues

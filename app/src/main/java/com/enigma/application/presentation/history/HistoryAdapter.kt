@@ -10,7 +10,6 @@ class HistoryAdapter(val onClickListener: HistoryOnClickListener) :
     RecyclerView.Adapter<HistoryViewHolder>() {
     var tasks = ArrayList<ListItem>()
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val v = inflater.inflate(R.layout.container_history, parent, false)
@@ -22,7 +21,6 @@ class HistoryAdapter(val onClickListener: HistoryOnClickListener) :
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
         val task = tasks[position]
         holder.bind(task)
-
     }
 
     fun setView(data: List<ListItem>) {

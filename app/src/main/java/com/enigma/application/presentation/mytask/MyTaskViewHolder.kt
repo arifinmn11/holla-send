@@ -20,6 +20,7 @@ class MyTaskViewHolder(view: View, val onClickListener: MyTaskOnClickListener) :
                 buttonDoneTask.setOnClickListener {
                     onClickListener.onClickDone(data)
                 }
+
                 when (priority) {
                     "HIGH" -> {
                         labelPriority.setImageResource(R.drawable.label_high_priority)

@@ -21,7 +21,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class WelcomeFragment : Fragment() {
-
     lateinit var binding: FragmentWelcomeBinding
     lateinit var activityViewModel: ActivityViewModel
 

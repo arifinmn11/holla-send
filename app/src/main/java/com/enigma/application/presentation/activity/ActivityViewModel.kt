@@ -21,6 +21,4 @@ class ActivityViewModel @Inject constructor() : ViewModel() {
             _bottomVisibility.postValue(View.VISIBLE)
         }
     }
-
-
 }
