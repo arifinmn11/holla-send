@@ -27,7 +27,6 @@ class Constants {
         // BOTTOM MENU TAG
         val MENU_HISTORY = "History"
         val MENU_HOME = "Home"
-        val MENU_TASK = "Task"
         val MENU_PROFILE = "Profile"
 
         // VALIDATION TAG

@@ -5,6 +5,7 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -46,23 +47,7 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
             bottomNavigation.setOnNavigationItemSelectedListener {
                 enableButton()
-                when ("$it") {
-                    MENU_HOME -> {
-                        bottomNavigation.menu.getItem(0).isEnabled = false
-                        navHostFragment.findNavController()
-                            .navigate(R.id.action_global_homeFragment)
-                    }
-                    MENU_HISTORY -> {
-                        bottomNavigation.menu.getItem(1).isEnabled = false
-                        navHostFragment.findNavController()
-                            .navigate(R.id.action_global_historyFragment)
-                    }
-                    MENU_PROFILE -> {
-                        bottomNavigation.menu.getItem(2).isEnabled = false
-                        navHostFragment.findNavController()
-                            .navigate(R.id.action_global_profileFragment)
-                    }
-                }
+                handleBottomMenu(it.toString())
                 true
             }
         }
@@ -80,11 +65,66 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun handleBottomMenu(it: String) {
+        binding.apply {
+            when ("$it") {
+                MENU_HOME -> {
+                    bottomNavigation.menu.getItem(0).isEnabled = false
+                    navHostFragment.findNavController()
+                        .navigate(R.id.action_global_homeFragment)
+                }
+                MENU_HISTORY -> {
+                    bottomNavigation.menu.getItem(1).isEnabled = false
+                    navHostFragment.findNavController()
+                        .navigate(R.id.action_global_historyFragment)
+                }
+                MENU_PROFILE -> {
+                    bottomNavigation.menu.getItem(2).isEnabled = false
+                    navHostFragment.findNavController()
+                        .navigate(R.id.action_global_profileFragment)
+                }
+                else -> {
+
+                }
+            }
+        }
+    }
+
+
     fun subscribe() {
         viewModel.bottomVisibility.observe(this) {
             val maxHeight = binding.layoutActivity.height
             binding.navHostFragment.minimumHeight = maxHeight
             binding.bottomNavigation.visibility = it
+        }
+
+        viewModel.bottomNav.observe(this) {
+            binding.apply {
+                enableButton()
+                when (it) {
+                    MENU_HOME -> {
+                        bottomNavigation.menu.getItem(0)
+                            .isEnabled = false
+                        bottomNavigation.menu.getItem(0)
+                            .isChecked = false
+                    }
+                    MENU_HISTORY -> {
+                        bottomNavigation.menu.getItem(1).isEnabled = false
+
+                        bottomNavigation.menu.getItem(1)
+                            .isChecked = false
+                    }
+                    MENU_PROFILE -> {
+                        bottomNavigation.menu.getItem(2).isEnabled = false
+
+                        bottomNavigation.menu.getItem(2)
+                            .isChecked = false
+                    }
+                    else -> {
+
+                    }
+                }
+            }
         }
 
         if (checkGooglePlayServices()) {
@@ -131,5 +171,6 @@ class MainActivity : AppCompatActivity() {
         val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
         return status == ConnectionResult.SUCCESS
     }
+
 
 }

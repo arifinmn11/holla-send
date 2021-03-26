@@ -17,6 +17,7 @@ import com.enigma.application.data.model.history.ListItem
 import com.enigma.application.databinding.FragmentHistoryBinding
 import com.enigma.application.presentation.activity.ActivityViewModel
 import com.enigma.application.utils.Constants
+import com.enigma.application.utils.Constants.Companion.MENU_HOME
 import com.enigma.application.utils.component.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -76,6 +77,7 @@ class HistoryFragment : Fragment() {
                 object : OnBackPressedCallback(true /* enabled by default */) {
                     override fun handleOnBackPressed() {
                         // Handle the back button event
+                        activityViewModel.setBottomNav(MENU_HOME)
                         findNavController().navigate(R.id.action_global_homeFragment)
                     }
                 }

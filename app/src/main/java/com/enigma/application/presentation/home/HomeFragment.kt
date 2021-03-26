@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -105,6 +106,11 @@ class HomeFragment : Fragment() {
                         }
                     }
                     else -> {
+                        Toast.makeText(
+                            requireContext(),
+                            "Something wrong with your connection!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         binding.refreshHome.isRefreshing = false
                     }
                 }

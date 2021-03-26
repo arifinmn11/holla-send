@@ -58,10 +58,10 @@ class RegisterViewModel @Inject constructor(@PostRegistration val repository: Re
         if (!email.validEmail()) {
             validation.message = "Email is not Valid"
             validation.status = Constants.VALIDATION_EMAIL
-        } else if (username.length in 13 downTo 5) {
-            validation.message = "Password is not Valid min 6 character"
+        } else if (username.length !in 6..20) {
+            validation.message = "Username is not Valid min 6 character"
             validation.status = Constants.VALIDATION_USERNAME
-        } else if (password.length in 21 downTo 5) {
+        } else if (password.length !in 6..20) {
             validation.message = "Password is not Valid min 6 character"
             validation.status = Constants.VALIDATION_PASSWORD
         } else if (password != confirmPassword) {

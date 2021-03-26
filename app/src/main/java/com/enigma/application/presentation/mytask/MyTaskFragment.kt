@@ -42,6 +42,7 @@ class MyTaskFragment : Fragment() {
     lateinit var alertDialog: AlertDialog
     lateinit var rvAdapter: MyTaskAdapter
     private val LOCATION_PERMISSION_REQ_CODE = 1000
+    private var locationManager: LocationManager? = null
 
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
@@ -69,37 +70,9 @@ class MyTaskFragment : Fragment() {
         locationRequest.setInterval(10000L)
         locationRequest.setFastestInterval(5000L)
 
-        buildAlertMessageNoGps()
         initViewModel()
-        updateLocation()
         subscribe()
         subscribeButton()
-    }
-
-    private fun buildAlertMessageNoGps() {
-        GpsUtils(requireActivity()).turnGPSOn(object : GpsUtils.onGpsListener {
-            override fun gpsStatus(isGPSEnable: Boolean) {
-                // turn on GPS
-                isGPS = isGPSEnable
-            }
-        })
-    }
-
-    private fun updateLocation() {
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                for (location in locationResult.locations) {
-                    if (location != null) {
-                        if (isContinue) {
-                            viewModel.setLocationGps(location)
-                        }
-                        if (!isContinue && fusedLocationClient != null) {
-                            fusedLocationClient.removeLocationUpdates(locationCallback)
-                        }
-                    }
-                }
-            }
-        }
 
     }
 
@@ -109,6 +82,10 @@ class MyTaskFragment : Fragment() {
     ): View? {
         alertDialog.show()
 
+        // call function to active GPS
+        buildAlertMessageNoGps()
+        updateLocation()
+
         binding.apply {
             getActivityApi()
 
@@ -116,6 +93,7 @@ class MyTaskFragment : Fragment() {
             myTaskList.apply {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = rvAdapter
+                alertDialog.hide()
             }
 
             // on Refresh
@@ -181,6 +159,7 @@ class MyTaskFragment : Fragment() {
 
             }
 
+            // Stop activity!
             buttonStop.setOnClickListener {
                 val dialogView =
                     LayoutInflater.from(requireContext())
@@ -242,6 +221,7 @@ class MyTaskFragment : Fragment() {
 
             }
 
+            // Back to home
             buttonBack.setOnClickListener {
                 findNavController().navigate(R.id.action_global_homeFragment)
             }
@@ -350,103 +330,106 @@ class MyTaskFragment : Fragment() {
 
         // Live Data on Click Done
         viewModel.doneTask.observe(requireParentFragment()) { dataItem ->
+            alertDialog.hide()
             getCurrentLocation()
-            alertDialog.show()
-            val dialogView =
-                LayoutInflater.from(requireContext())
-                    .inflate(R.layout.bottom_sheet_dialog, null, false)
-            val dialogBuilder = BottomSheetDialog(requireContext())
-            dialogBuilder.setContentView(dialogView)
-            dialogBuilder.show()
-            dialogView.apply {
-                val destination = Location("${dataItem.destination?.name}")
-                destination.latitude = dataItem?.destination?.lat!!
-                destination.longitude = dataItem?.destination?.lon!!
-                button_positive.isEnabled = false
-                button_positive.text = "Loading..."
-                button_positive.setBackgroundColor(resources.getColor(R.color.hintColor))
 
-                viewModel.getLocation.observe(requireActivity()) {
-                    if (it.distanceTo(destination) < 100) {
-                        alertDialog.hide()
-                        button_positive.isEnabled = true
-                        button_positive.text = it.distanceTo(destination).toString()
-                        button_positive.backgroundTintList =
-                            ColorStateList.valueOf(resources.getColor(R.color.primary_700))
-                        button_positive.text = "Done"
-                        validation_location.text = "In Radius"
+            if (isLocationEnabled()) {
+                val dialogView =
+                    LayoutInflater.from(requireContext())
+                        .inflate(R.layout.bottom_sheet_dialog, null, false)
+                val dialogBuilder = BottomSheetDialog(requireContext())
+                dialogBuilder.setContentView(dialogView)
+                dialogBuilder.show()
+                dialogView.apply {
+                    val destination = Location("${dataItem.destination?.name}")
+                    destination.latitude = dataItem?.destination?.lat!!
+                    destination.longitude = dataItem?.destination?.lon!!
+                    button_positive.isEnabled = false
+                    button_positive.text = "Loading..."
+                    button_positive.setBackgroundColor(resources.getColor(R.color.hintColor))
 
-                    } else {
-                        alertDialog.hide()
-                        validation_location.text =
-                            "Out of Radius (Distance to location %.2f km)".format(
-                                it.distanceTo(
-                                    destination
-                                ) / 1000
-                            )
-                        button_positive.isEnabled = false
-                        button_positive.text = "Out of Radius"
-                        button_positive.backgroundTintList =
-                            ColorStateList.valueOf(resources.getColor(R.color.hintColor))
-                    }
-                }
+                    viewModel.getLocation.observe(requireActivity()) {
+                        if (it.distanceTo(destination) < 100) {
+                            button_positive.isEnabled = true
+                            button_positive.text = it.distanceTo(destination).toString()
+                            button_positive.backgroundTintList =
+                                ColorStateList.valueOf(resources.getColor(R.color.primary_700))
+                            button_positive.text = "Done"
+                            validation_location.text = "In Radius"
 
-                title_dialog.text = "Are you sure to change status to delivered??"
-
-                dataItem.destination?.apply {
-                    text_receiver.text = this?.name ?: ""
-                    text_location.text = this?.address ?: ""
-                }
-
-                dataItem.requestBy?.userDetails.apply {
-                    text_user.text = "${this?.firstName} ${this?.lastName}"
-                }
-
-                dataItem.createDate.apply {
-                    text_date.text = this?.substring(0, 10)
-                }
-
-                button_positive.setOnClickListener {
-                    dataItem?.id?.let { id ->
-                        viewModel.doneTaskApi(id).observe(requireActivity()) { res ->
-                            when (res?.code) {
-                                200 -> {
-                                    viewModel.getMyTasksApi().observe(requireActivity()) { data ->
-                                        Toast.makeText(
-                                            requireContext(),
-                                            "Data has been change!",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        handleGetApi(data)
-                                        dialogBuilder.dismiss()
-                                    }
-                                }
-                                else -> {
-                                    viewModel.getMyTasksApi().observe(requireActivity()) { data ->
-                                        Toast.makeText(
-                                            requireContext(),
-                                            "Something wrong, try again!",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        handleGetApi(data)
-                                        dialogBuilder.dismiss()
-                                    }
-
-                                }
-                            }
+                        } else {
+                            validation_location.text =
+                                "Out of Radius (Distance to location %.2f km)".format(
+                                    it.distanceTo(
+                                        destination
+                                    ) / 1000
+                                )
+                            button_positive.isEnabled = false
+                            button_positive.text = "Out of Radius"
+                            button_positive.backgroundTintList =
+                                ColorStateList.valueOf(resources.getColor(R.color.hintColor))
                         }
                     }
 
-                }
-                button_negative.setOnClickListener {
-                    alertDialog.hide()
-                    dialogBuilder.dismiss()
+                    title_dialog.text = "Are you sure to change status to delivered??"
+
+                    dataItem.destination?.apply {
+                        text_receiver.text = this?.name ?: ""
+                        text_location.text = this?.address ?: ""
+                    }
+
+                    dataItem.requestBy?.userDetails.apply {
+                        text_user.text = "${this?.firstName} ${this?.lastName}"
+                    }
+
+                    dataItem.createDate.apply {
+                        text_date.text = this?.substring(0, 10)
+                    }
+
+                    button_positive.setOnClickListener {
+                        dataItem?.id?.let { id ->
+                            viewModel.doneTaskApi(id).observe(requireActivity()) { res ->
+                                when (res?.code) {
+                                    200 -> {
+                                        viewModel.getMyTasksApi()
+                                            .observe(requireActivity()) { data ->
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    "Data has been change!",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                handleGetApi(data)
+                                                dialogBuilder.dismiss()
+                                            }
+                                    }
+                                    else -> {
+                                        viewModel.getMyTasksApi()
+                                            .observe(requireActivity()) { data ->
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    "Something wrong, try again!",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                handleGetApi(data)
+                                                dialogBuilder.dismiss()
+                                            }
+
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                    button_negative.setOnClickListener {
+                        dialogBuilder.dismiss()
+                    }
                 }
             }
+
         }
     }
 
-    fun handleGetApi(data: ResponseMyTasks?) {
+    private fun handleGetApi(data: ResponseMyTasks?) {
         binding.apply {
             data?.code.apply {
                 when (this) {
@@ -495,63 +478,36 @@ class MyTaskFragment : Fragment() {
         }
     }
 
-    fun handleUpdateApi(data: ResponseMyTasks?) {
-        data?.code.apply {
-            when (this) {
-                200 -> data?.data.apply {
-                    subscribe()
-                }
-                400 -> {
-                    pageWarning(true, 404)
-                    alertDialog.hide()
-                    Toast.makeText(
-                        requireContext(),
-                        "Your token is expired!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                else -> {
-                    pageWarning(true, 500)
-                    alertDialog.hide()
-                    Toast.makeText(
-                        requireContext(),
-                        "Something wrong with your connection!",
-                        Toast.LENGTH_SHORT
-                    ).show()
+    private fun getActivityApi() =
+        viewModel.getCheckActivityApi().observe(requireActivity()) { res ->
+            binding.apply {
+                alertDialog.hide()
+                when (res?.code) {
+                    200 -> {
+                        alertDialog.hide()
+                        buttonStart.visibility = View.GONE
+                        buttonStop.visibility = View.VISIBLE
+                        viewModel.getMyTasksApi().observe(requireActivity()) { data ->
+                            handleGetApi(data)
+                        }
+                    }
+                    404 -> {
+                        alertDialog.hide()
+                        buttonStart.visibility = View.VISIBLE
+                        buttonStop.visibility = View.GONE
+                        viewModel.getMyTasksApi().observe(requireActivity()) { data ->
+                            handleGetApi(data)
+                        }
+                    }
+                    else -> {
+                        alertDialog.hide()
+                        Log.d("SOMETHING WRONG!", "$res")
+                    }
                 }
             }
         }
-    }
 
-    fun getActivityApi() = viewModel.getCheckActivityApi().observe(requireActivity()) { res ->
-        binding.apply {
-            alertDialog.show()
-            when (res?.code) {
-                200 -> {
-                    alertDialog.hide()
-                    buttonStart.visibility = View.GONE
-                    buttonStop.visibility = View.VISIBLE
-                    viewModel.getMyTasksApi().observe(requireActivity()) { data ->
-                        handleGetApi(data)
-                    }
-                }
-                404 -> {
-                    alertDialog.hide()
-                    buttonStart.visibility = View.VISIBLE
-                    buttonStop.visibility = View.GONE
-                    viewModel.getMyTasksApi().observe(requireActivity()) { data ->
-                        handleGetApi(data)
-                    }
-                }
-                else -> {
-                    alertDialog.hide()
-                    Log.d("SOMETHING WRONG!", "$res")
-                }
-            }
-        }
-    }
-
-    fun pageWarning(status: Boolean, error: Int? = 0) {
+    private fun pageWarning(status: Boolean, error: Int? = 0) {
         binding.apply {
             notificationAlert.visibility = View.GONE
             messageAlert.visibility = View.GONE
@@ -587,6 +543,7 @@ class MyTaskFragment : Fragment() {
         }
     }
 
+    // Get location now!
     private fun getCurrentLocation() {
         // checking location permission
         if (ActivityCompat.checkSelfPermission(
@@ -602,7 +559,6 @@ class MyTaskFragment : Fragment() {
             );
             return
         }
-
 
         try {
             if (isLocationEnabled()) {
@@ -646,15 +602,47 @@ class MyTaskFragment : Fragment() {
         }
     }
 
-    private var locationManager: LocationManager? = null
-
+    // Handle GPS
     protected fun isLocationEnabled(): Boolean {
         locationManager =
             (requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager)!!
+        if(!locationManager!!.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+            alertDialog.hide()
+
+
         return locationManager!!.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
+    // Handle permission for active gps location
+    private fun buildAlertMessageNoGps() {
+        GpsUtils(requireActivity()).turnGPSOn(object : GpsUtils.onGpsListener {
+            override fun gpsStatus(isGPSEnable: Boolean) {
+                // turn on GPS
+                isGPS = isGPSEnable
+            }
+        })
+    }
 
+    // Handle update location gps
+    private fun updateLocation() {
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                for (location in locationResult.locations) {
+                    if (location != null) {
+                        if (isContinue) {
+                            viewModel.setLocationGps(location)
+                        }
+                        if (!isContinue && fusedLocationClient != null) {
+                            fusedLocationClient.removeLocationUpdates(locationCallback)
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    // Handle permission Location
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {

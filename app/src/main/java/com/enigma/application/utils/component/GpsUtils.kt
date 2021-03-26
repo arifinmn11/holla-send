@@ -12,7 +12,7 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 
 
-class GpsUtils(private val context: Context) {
+class GpsUtils(val context: Context) {
     private val mSettingsClient: SettingsClient = LocationServices.getSettingsClient(context)
     private val mLocationSettingsRequest: LocationSettingsRequest
     private val locationManager: LocationManager =
@@ -67,7 +67,7 @@ class GpsUtils(private val context: Context) {
     init {
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         locationRequest.interval = (10 * 1000).toLong()
-        locationRequest.fastestInterval = (2 * 1000).toLong()
+        locationRequest.fastestInterval = (5 * 1000).toLong()
         val builder = LocationSettingsRequest.Builder()
             .addLocationRequest(locationRequest)
         mLocationSettingsRequest = builder.build()
