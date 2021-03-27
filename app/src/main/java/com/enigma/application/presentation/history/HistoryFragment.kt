@@ -143,6 +143,11 @@ class HistoryFragment : Fragment() {
                                     )
                                 }
 
+                                if (total == 0) {
+                                    pageText.text = "Page -"
+                                    totalText.text = "Total : -"
+                                }
+
                             }
                         }
                     }
@@ -154,6 +159,7 @@ class HistoryFragment : Fragment() {
                                 .apply()
                             findNavController().navigate(R.id.action_global_loginFragment)
                         }
+
                     }
                     else -> {
                         binding.apply {
@@ -165,6 +171,7 @@ class HistoryFragment : Fragment() {
 
         }
     }
+
 
     companion object {
 

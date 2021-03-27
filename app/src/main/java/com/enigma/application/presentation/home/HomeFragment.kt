@@ -2,8 +2,8 @@ package com.enigma.application.presentation.home
 
 import android.Manifest
 import android.content.SharedPreferences
-import android.location.LocationManager
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -29,11 +30,11 @@ class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
     lateinit var viewModel: HomeViewModel
     lateinit var activityViewModel: ActivityViewModel
+    private val handler = Handler()
+    var timer: Timer = Timer()
 
     @Inject
     lateinit var sharedPref: SharedPreferences
-
-    private var locationManager: LocationManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,6 +113,32 @@ class HomeFragment : Fragment() {
                             Toast.LENGTH_SHORT
                         ).show()
                         binding.refreshHome.isRefreshing = false
+                    }
+                }
+            }
+        }
+
+        viewModel.getActivity().observe(requireActivity()) { res ->
+            res?.code?.apply {
+                when (this) {
+                    200 -> {
+                        binding.apply {
+                            runningTime.visibility = View.VISIBLE
+                            timeStart.text = res?.data?.leavingTime?.substring(11, 16)
+                            Log.d("time", res?.data?.leavingTime.toString())
+                        }
+                    }
+
+                    401 -> {
+                        binding.apply {
+                            runningTime.visibility = View.GONE
+                        }
+                    }
+
+                    else -> {
+                        binding.apply {
+                            runningTime.visibility = View.GONE
+                        }
                     }
                 }
             }

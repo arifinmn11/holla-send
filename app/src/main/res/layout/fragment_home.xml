@@ -32,7 +32,7 @@
                         android:layout_weight="3"
                         android:background="@color/primary_700"
                         android:orientation="horizontal"
-                        android:paddingBottom="70dp">
+                        android:paddingBottom="90dp">
 
                         <TextView
                             style="@style/TextView.PoppinsNormal18spWhite"
@@ -41,23 +41,72 @@
                             android:layout_marginTop="20dp"
                             android:paddingLeft="30dp"
                             android:text="Dashboard" />
-
                     </LinearLayout>
-
                 </LinearLayout>
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="-65dp"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-85dp"
+                    android:orientation="vertical">
 
-
-                    <HorizontalScrollView
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/running_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:scrollbars="none">
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:visibility="visible">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="14dp"
+                                    android:layout_height="14dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginTop="15dp"
+                                    android:src="@drawable/ic_baseline_timer_24" />
+
+                                <TextView
+                                    style="@style/TextView.PoppinsNormal16spWhite"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginRight="15dp"
+                                    android:text="Activity Time"
+                                    android:textColor="@color/primary_700" />
+
+                                <TextView
+                                    android:id="@+id/time_start"
+                                    style="@style/TextView.PoppinsNormal16spGrey"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginBottom="7dp"
+                                    android:text=""
+                                    android:textAlignment="textEnd"
+                                    android:textColor="@color/primary_700" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
 
 
                         <LinearLayout
@@ -76,36 +125,46 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="15dp"
-                                android:layout_marginRight="5dp">
+                                android:layout_marginRight="5dp"
+                                android:layout_weight="1">
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="vertical">
 
-                                    <TextView
-                                        style="@style/TextView.PoppinsNormal16spWhite"
+                                    <LinearLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginLeft="15dp"
-                                        android:layout_marginTop="10dp"
-                                        android:layout_marginRight="15dp"
-                                        android:text="Assigned"
-                                        android:textColor="@color/primary_700" />
+                                        android:orientation="horizontal">
+
+                                        <ImageView
+                                            android:layout_width="14dp"
+                                            android:layout_height="14dp"
+                                            android:layout_marginLeft="10dp"
+                                            android:layout_marginTop="15dp"
+                                            android:src="@drawable/ic_baseline_assignment_24" />
+
+                                        <TextView
+                                            style="@style/TextView.PoppinsNormal16spWhite"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="5dp"
+                                            android:layout_marginTop="10dp"
+                                            android:layout_marginRight="15dp"
+                                            android:text="Assigned"
+                                            android:textColor="@color/primary_700" />
+                                    </LinearLayout>
 
                                     <TextView
                                         android:id="@+id/assigned_count"
                                         style="@style/TextView.PoppinsNormal32spBlack"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginLeft="10dp"
-                                        android:layout_marginRight="10dp"
                                         android:text="0"
                                         android:textAlignment="center"
                                         android:textColor="@color/primary_700"
                                         android:textSize="40sp" />
-
-
                                 </LinearLayout>
 
                             </androidx.cardview.widget.CardView>
@@ -113,31 +172,43 @@
                             <androidx.cardview.widget.CardView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="15dp"
-                                android:layout_marginRight="10dp">
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="15dp"
+                                android:layout_weight="1">
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="vertical">
 
-                                    <TextView
-                                        style="@style/TextView.PoppinsNormal16spWhite"
+                                    <LinearLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginLeft="15dp"
-                                        android:layout_marginTop="10dp"
-                                        android:layout_marginRight="15dp"
-                                        android:text="Pick up"
-                                        android:textColor="@color/primary_700" />
+                                        android:orientation="horizontal">
+
+                                        <ImageView
+                                            android:layout_width="14dp"
+                                            android:layout_height="14dp"
+                                            android:layout_marginLeft="10dp"
+                                            android:layout_marginTop="15dp"
+                                            android:src="@drawable/ic_baseline_arrow_circle_up_24_primary_700" />
+
+                                        <TextView
+                                            style="@style/TextView.PoppinsNormal16spWhite"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="5dp"
+                                            android:layout_marginTop="10dp"
+                                            android:layout_marginRight="15dp"
+                                            android:text="Pick up"
+                                            android:textColor="@color/primary_700" />
+                                    </LinearLayout>
 
                                     <TextView
                                         android:id="@+id/pickup_count"
                                         style="@style/TextView.PoppinsNormal32spBlack"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginLeft="10dp"
-                                        android:layout_marginRight="10dp"
                                         android:text="0"
                                         android:textAlignment="center"
                                         android:textColor="@color/primary_700"
@@ -151,22 +222,36 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp"
-                                android:layout_marginRight="10dp">
+                                android:layout_marginRight="10dp"
+                                android:visibility="gone">
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="vertical">
 
-                                    <TextView
-                                        style="@style/TextView.PoppinsNormal16spWhite"
+                                    <LinearLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginLeft="15dp"
-                                        android:layout_marginTop="10dp"
-                                        android:layout_marginRight="15dp"
-                                        android:text="Delivered"
-                                        android:textColor="@color/primary_700" />
+                                        android:orientation="horizontal">
+
+                                        <ImageView
+                                            android:layout_width="14dp"
+                                            android:layout_height="14dp"
+                                            android:layout_marginLeft="10dp"
+                                            android:layout_marginTop="15dp"
+                                            android:src="@drawable/ic_baseline_check_box_24" />
+
+                                        <TextView
+                                            style="@style/TextView.PoppinsNormal16spWhite"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="5dp"
+                                            android:layout_marginTop="10dp"
+                                            android:layout_marginRight="15dp"
+                                            android:text="Delivered"
+                                            android:textColor="@color/primary_700" />
+                                    </LinearLayout>
 
                                     <TextView
                                         android:id="@+id/delivered_count"
@@ -185,122 +270,123 @@
                             </androidx.cardview.widget.CardView>
 
                         </LinearLayout>
-                    </HorizontalScrollView>
+                        <!--                    </HorizontalScrollView>-->
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:paddingBottom="0dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="173dp" />
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cvMyTask"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="15dp"
+                            android:layout_marginBottom="0dp"
+                            android:layout_weight="1">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="100dp"
+                                    android:layout_margin="15dp"
+                                    android:src="@drawable/ic_undraw_notebook_tlkl" />
+
+                                <TextView
+                                    style="@style/TextView.PoppinsNormal16spBlack"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="5dp"
+                                    android:text="My Task"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:id="@+id/my_task_notification"
+                                    style="@style/TextView.PoppinsNormal12spWhite"
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_gravity="right"
+                                    android:layout_marginTop="-152dp"
+                                    android:layout_marginRight="5dp"
+                                    android:background="@drawable/radius_notification"
+                                    android:gravity="center"
+                                    android:minWidth="20dp"
+                                    android:text="20"
+                                    android:visibility="invisible" />
+
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:paddingBottom="20dp">
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cvNewTask"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginRight="15dp"
+                            android:layout_marginBottom="20dp"
+                            android:layout_weight="1">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
+
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="100dp"
+                                    android:layout_margin="15dp"
+                                    android:src="@drawable/ic_undraw_mailbox_re_dvds" />
+
+                                <TextView
+                                    style="@style/TextView.PoppinsNormal16spBlack"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="5dp"
+                                    android:text="New Task"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:id="@+id/new_task_count"
+                                    style="@style/TextView.PoppinsNormal12spWhite"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="20dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="-155dp"
+                                    android:layout_marginRight="33.5dp"
+                                    android:background="@color/primary"
+                                    android:gravity="center"
+                                    android:minWidth="40dp"
+                                    android:text="" />
+
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+                    </LinearLayout>
+
                 </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:paddingBottom="0dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="173dp" />
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/cvMyTask"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginRight="15dp"
-                        android:layout_marginBottom="0dp"
-                        android:layout_weight="1">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="100dp"
-                                android:layout_margin="15dp"
-                                android:src="@drawable/ic_undraw_notebook_tlkl" />
-
-                            <TextView
-                                style="@style/TextView.PoppinsNormal16spBlack"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="5dp"
-                                android:text="My Task"
-                                android:textAlignment="center" />
-
-                            <TextView
-                                android:id="@+id/my_task_notification"
-                                style="@style/TextView.PoppinsNormal12spWhite"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_gravity="right"
-                                android:layout_marginTop="-152dp"
-                                android:layout_marginRight="5dp"
-                                android:background="@drawable/radius_notification"
-                                android:gravity="center"
-                                android:minWidth="20dp"
-                                android:text="20"
-                                android:visibility="invisible" />
-
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:paddingBottom="20dp">
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/cvNewTask"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginRight="15dp"
-                        android:layout_marginBottom="20dp"
-                        android:layout_weight="1">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical">
-
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="100dp"
-                                android:layout_margin="15dp"
-                                android:src="@drawable/ic_undraw_mailbox_re_dvds" />
-
-                            <TextView
-                                style="@style/TextView.PoppinsNormal16spBlack"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="5dp"
-                                android:text="New Task"
-                                android:textAlignment="center" />
-
-                            <TextView
-                                android:id="@+id/new_task_count"
-                                style="@style/TextView.PoppinsNormal12spWhite"
-                                android:layout_width="wrap_content"
-                                android:layout_height="20dp"
-                                android:layout_gravity="center"
-                                android:layout_marginTop="-155dp"
-                                android:layout_marginRight="33.5dp"
-                                android:background="@color/primary"
-                                android:gravity="center"
-                                android:minWidth="40dp"
-                                android:text="" />
-
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
-                </LinearLayout>
-
 
             </LinearLayout>
 
