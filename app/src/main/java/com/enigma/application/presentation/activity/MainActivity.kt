@@ -1,33 +1,20 @@
 package com.enigma.application.presentation.activity
 
-import android.Manifest
-import android.content.*
-import android.content.pm.PackageManager
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
 import com.enigma.application.R
 import com.enigma.application.databinding.ActivityMainBinding
-import com.enigma.application.presentation.activity.NotificationHelper.displayNotification
 import com.enigma.application.utils.Constants.Companion.MENU_HISTORY
 import com.enigma.application.utils.Constants.Companion.MENU_HOME
 import com.enigma.application.utils.Constants.Companion.MENU_PROFILE
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -42,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
         initViewModel()
         subscribe()
+        firebaseMessaging()
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         binding.apply {
@@ -126,51 +114,17 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-        if (checkGooglePlayServices()) {
-            // [START retrieve_current_token]
-            FirebaseInstanceId.getInstance().instanceId
-                .addOnCompleteListener(OnCompleteListener { task ->
-                    if (!task.isSuccessful) {
-                        Log.w("ERROR", getString(R.string.token_error), task.exception)
-                        return@OnCompleteListener
-                    }
-                    // Get new Instance ID token
-                    val token = task.result?.token
-                    // Log and toast
-                    val msg = getString(R.string.token_prefix, token)
-                    Log.d("TAG", msg)
-                })
-        }
     }
 
-    override fun onStart() {
-        super.onStart()
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-            messageReceiver,
-            IntentFilter("MyData")
-        )
-    }
 
-    private val messageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent) {
-            Log.d(
-                "MESSAGE RECEIVER",
-                intent.extras?.getString("title")!! + " " + intent.extras?.getString("body")!!
-            )
-            if (context != null) {
-                displayNotification(
-                    context,
-                    intent.extras?.getString("title")!!, intent.extras?.getString("body")!!
-                )
+    fun firebaseMessaging() {
+        FirebaseMessaging.getInstance().subscribeToTopic("NewTask")
+            .addOnCompleteListener { task ->
+                var msg = "Subscribed"
+                if (!task.isSuccessful) {
+                    msg = "Something wrong!"
+                }
+                Log.d("TAG", msg)
             }
-        }
     }
-
-    private fun checkGooglePlayServices(): Boolean {
-        val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
-        return status == ConnectionResult.SUCCESS
-    }
-
-
 }
