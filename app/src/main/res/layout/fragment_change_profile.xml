@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.profile_edit.ChangeProfileFragment">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/primary_700"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="10"
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp">
+
+                    <Button
+                        android:id="@+id/buttonBack"
+                        android:layout_width="28dp"
+                        android:layout_height="26dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/ic_baseline_arrow_back_ios_24" />
+
+
+                    <TextView
+                        style="@style/TextView.PoppinsNormal16spWhite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:layout_weight="1"
+                        android:text="Profile" />
+
+                    <TextView
+                        android:id="@+id/totalTask"
+                        style="@style/TextView.PoppinsNormal16spWhite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:layout_marginRight="20dp"
+                        android:text=""
+                        android:visibility="visible" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/etEmailLayout"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:gravity="bottom"
+                app:hintEnabled="true"
+                app:hintTextColor="@color/hintColor"
+                app:passwordToggleEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etEmail"
+                    style="@style/EditText.PoppinsNormal14spGrey"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:background="@drawable/radius_edit_text"
+                    android:contentDescription=""
+                    android:hint="Email"
+                    android:inputType="textEmailAddress" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/etUsernameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:gravity="bottom"
+                app:hintEnabled="true"
+                app:hintTextColor="@color/hintColor"
+                app:passwordToggleEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etUsername"
+                    style="@style/EditText.PoppinsNormal14spGrey"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:background="@drawable/radius_edit_text"
+                    android:contentDescription=""
+                    android:hint="Username"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_weight="2"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/etFirstNameLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="62dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    app:hintEnabled="true"
+                    app:hintTextColor="@color/hintColor"
+                    app:passwordToggleEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etFirstName"
+                        style="@style/EditText.PoppinsNormal14spGrey"
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/radius_edit_text"
+                        android:contentDescription=""
+                        android:hint="First Name"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/etLastNameLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="62dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    app:hintEnabled="true"
+                    app:hintTextColor="@color/hintColor"
+                    app:passwordToggleEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etLastName"
+                        style="@style/EditText.PoppinsNormal14spGrey"
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:background="@drawable/radius_edit_text"
+                        android:contentDescription=""
+                        android:hint="Last Name"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinnerIdentity"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/radius_spinner"
+                android:isScrollContainer="true" />
+
+            <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/etIdentificationNumberLayout"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:gravity="bottom"
+                app:hintEnabled="true"
+                app:hintTextColor="@color/hintColor"
+                app:passwordToggleEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etIdentificationNumber"
+                    style="@style/EditText.PoppinsNormal14spGrey"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:background="@drawable/radius_edit_text"
+                    android:contentDescription=""
+                    android:hint="No Identification"
+                    android:inputType="number|none" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/etAddressLayout"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:gravity="bottom"
+                app:hintEnabled="true"
+                app:hintTextColor="@color/hintColor"
+                app:passwordToggleEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etContact"
+                    style="@style/EditText.PoppinsNormal14spGrey"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:background="@drawable/radius_edit_text"
+                    android:contentDescription=""
+                    android:hint="Contact Number"
+                    android:inputType="number|none" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/save_button"
+                style="@style/TextView.PoppinsNormal16spBlack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="@color/primary_700"
+                android:text="Save"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/cancel_button"
+                style="@style/TextView.PoppinsNormal16spBlack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="30dp"
+                android:backgroundTint="@color/errorColor"
+                android:text="Cancel"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

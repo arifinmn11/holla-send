@@ -54,5 +54,10 @@ class ApiModule {
         return retrofit.create(HistoryApi::class.java)
     }
 
+    @Singleton
+    @Provides
+    fun provideProfile(retrofit: Retrofit): ProfileApi {
+        return retrofit.create(ProfileApi::class.java)
+    }
 
 }

@@ -5,7 +5,7 @@ import java.util.regex.Pattern
 class Constants {
     companion object {
         // URL
-        // val BASE_URL = "http://10.10.12.251:8080/"
+//         val BASE_URL = "http://10.10.12.251:8080/"
         val BASE_URL = "http://10.10.12.19:8080/"
         // val BASE_URL = "http://192.168.43.164:8080/"
         // val BASE_URL = "http://10.10.14.45:8080/"
@@ -13,6 +13,7 @@ class Constants {
         // SHARED PREFERENCES TAG
         val TOKEN = "TOKEN"
         val USERNAME = "USERNAME"
+        val EMAIL = "EMAIL"
         val PASSWORD = "PASSWORD"
         val PREREFERENCES = "PREFERENCES"
         val ACTIVITY_ID = "ACTIVITY_ID"

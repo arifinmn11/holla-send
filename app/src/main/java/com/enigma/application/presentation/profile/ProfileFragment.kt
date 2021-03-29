@@ -129,6 +129,14 @@ class ProfileFragment : Fragment() {
                 }
             }
 
+            changeProfile.setOnClickListener {
+                findNavController().navigate(R.id.action_profileFragment_to_changeProfileFragment)
+            }
+
+            changePassword.setOnClickListener {
+//                findNavController().navigate(R.id.action_profileFragment_to_changeProfileFragment)
+            }
+
             val callback: OnBackPressedCallback =
                 object : OnBackPressedCallback(true /* enabled by default */) {
                     override fun handleOnBackPressed() {

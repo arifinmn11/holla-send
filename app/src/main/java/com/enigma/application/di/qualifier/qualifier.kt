@@ -2,7 +2,6 @@ package com.enigma.application.di.qualifier
 
 import javax.inject.Qualifier
 
-
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class PostAuth
@@ -27,11 +26,9 @@ annotation class GetNewTaskWaiting
 @Retention(AnnotationRetention.BINARY)
 annotation class PutAddToMyTask
 
-
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class GetMyTaskUnFinished
-
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
@@ -41,7 +38,10 @@ annotation class CourierActivity
 @Retention(AnnotationRetention.BINARY)
 annotation class Dashboard
 
-
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class History
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class Profile

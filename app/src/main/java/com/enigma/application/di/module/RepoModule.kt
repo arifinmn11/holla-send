@@ -46,5 +46,9 @@ internal abstract class RepoModule {
     @Binds
     @History
     abstract fun bindRepositoryGetHistory(repositoryImpl: HistoryRepositoryImpl): HistoryRepository
+
+    @Binds
+    @Profile
+    abstract fun bindRepositoryProfile(repositoryImpl: ProfileRepositoryImpl): ProfileRepository
 }
 
