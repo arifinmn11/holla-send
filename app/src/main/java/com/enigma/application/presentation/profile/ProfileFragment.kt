@@ -134,7 +134,7 @@ class ProfileFragment : Fragment() {
             }
 
             changePassword.setOnClickListener {
-//                findNavController().navigate(R.id.action_profileFragment_to_changeProfileFragment)
+                findNavController().navigate(R.id.action_profileFragment_to_changePasswordFragment)
             }
 
             val callback: OnBackPressedCallback =

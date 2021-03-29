@@ -135,6 +135,14 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/profileFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_profileFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/profileFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <action
         android:id="@+id/action_global_profileFragment"
@@ -161,4 +169,9 @@
         android:name="com.enigma.application.presentation.profile_edit.ChangeProfileFragment"
         android:label="fragment_change_profile"
         tools:layout="@layout/fragment_change_profile" />
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.enigma.application.presentation.password_edit.ChangePasswordFragment"
+        android:label="fragment_change_password"
+        tools:layout="@layout/fragment_change_password" />
 </navigation>

@@ -25,7 +25,6 @@
                 android:text="Sign up"
                 android:textAlignment="center" />
 
-
             <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/etEmailLayout"
                 android:layout_width="match_parent"
@@ -67,7 +66,6 @@
                     android:hint="Username"
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
-
 
             <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/etPasswordLayout"
