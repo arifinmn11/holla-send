@@ -123,7 +123,6 @@ class ChangeProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     identification = identity,
                     noIdentification = identificationNumber
                 )
-
             }
 
             cancelButton.setOnClickListener {
@@ -176,8 +175,6 @@ class ChangeProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
                             contactNumber = contactNumber
                         )
                     )
-
-                    Log.d("REQUEST", request.toString())
 
                     res?.let {
                         viewModel.updateProfile(request).observe(this) { update ->

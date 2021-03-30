@@ -47,17 +47,15 @@ class ViewModelChangePassword @Inject constructor(@Profile val repository: Profi
         confirmPassword: String
     ) {
 
-
-
         var validation = ResponseValidation("", "")
         if (oldPassword.length < 8) {
             validation.message = "old password is not valid!"
             validation.status = Constants.VALIDATION_PASSWORD
-        } else if (newPassword.length < 8) {
+        } else if (newPassword.length < 8 || newPassword == oldPassword) {
             validation.message = "new password is not valid!"
             validation.status = Constants.VALIDATION_NEW_PASSWORD
-        } else if (confirmPassword.length < 8 && confirmPassword != newPassword) {
-            validation.message = "Identification is not valid!"
+        } else if (confirmPassword.length < 8 || confirmPassword != newPassword) {
+            validation.message = "confirm password is not valid!"
             validation.status = Constants.VALIDATION_CONFIRM_PASSWORD
         } else {
             validation.message = ""
