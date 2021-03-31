@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.enigma.application.data.model.auth.RequestAuth
 import com.enigma.application.data.model.auth.ResponseAuth
 import com.enigma.application.data.model.profile.ResponseProfile
+import com.enigma.application.data.model.radius.ResponseRadius
 import com.enigma.application.data.repository.AuthRepository
 import com.enigma.application.di.qualifier.GetProfile
 import com.enigma.application.di.qualifier.PostAuth
@@ -25,7 +26,6 @@ class SplashViewModel @Inject constructor(@GetProfile val repository: AuthReposi
             try {
                 response = repository.getMe()
             } catch (e: Exception) {
-                Log.d("RESPONSE", "$e")
                 response =
                     ResponseProfile(
                         code = 400,
@@ -34,6 +34,25 @@ class SplashViewModel @Inject constructor(@GetProfile val repository: AuthReposi
                     )
             } finally {
                 Log.d("RESPONSE", "$response")
+                emit(response)
+            }
+
+        }
+    }
+
+    fun getRadius() = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+        withTimeout(5000) {
+            var response: ResponseRadius? = null
+            try {
+                response = repository.getRadius()
+            } catch (e: Exception) {
+                response =
+                    ResponseRadius(
+                        code = 400,
+                        message = "Error, try again",
+                        data = null
+                    )
+            } finally {
                 emit(response)
             }
 

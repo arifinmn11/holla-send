@@ -25,6 +25,7 @@ import com.enigma.application.data.model.mytask.DataItem
 import com.enigma.application.data.model.mytask.ResponseMyTasks
 import com.enigma.application.databinding.FragmentMyTaskBinding
 import com.enigma.application.presentation.activity.ActivityViewModel
+import com.enigma.application.utils.Constants
 import com.enigma.application.utils.component.GpsUtils
 import com.enigma.application.utils.component.LoadingDialog
 import com.google.android.gms.location.*
@@ -48,7 +49,6 @@ class MyTaskFragment : Fragment() {
     private var longitude: Double = 0.0
     private var isContinue = true
     private var isGPS = false
-
 
     lateinit var locationRequest: LocationRequest
     lateinit var locationCallback: LocationCallback
@@ -349,7 +349,7 @@ class MyTaskFragment : Fragment() {
                     button_positive.setBackgroundColor(resources.getColor(R.color.hintColor))
 
                     viewModel.getLocation.observe(requireActivity()) {
-                        if (it.distanceTo(destination) < 100) {
+                        if (it.distanceTo(destination) < sharedPref.getInt(Constants.MIN_RADIUS, 100)) {
                             button_positive.isEnabled = true
                             button_positive.text = it.distanceTo(destination).toString()
                             button_positive.backgroundTintList =

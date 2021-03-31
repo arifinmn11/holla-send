@@ -49,8 +49,19 @@ class SplashFragment : Fragment() {
             activityViewModel.setBottomVisibility(false)
             when (res?.code) {
                 200 -> {
-                    activityViewModel.setBottomVisibility(true)
-                    findNavController().navigate(R.id.action_global_homeFragment)
+                    viewModel.getRadius().observe(this) { res ->
+                        when(res?.code) {
+                            200 -> {
+                                res?.data?.let {
+                                    sharedPref.edit()
+                                        .putInt(Constants.MIN_RADIUS, it)
+                                        .apply()
+                                    activityViewModel.setBottomVisibility(true)
+                                    findNavController().navigate(R.id.action_global_homeFragment)
+                                }
+                            }
+                        }
+                    }
                 }
                 404 -> {
                     sharedPref.edit()
