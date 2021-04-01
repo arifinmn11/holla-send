@@ -21,6 +21,10 @@ class MyTaskViewHolder(view: View, val onClickListener: MyTaskOnClickListener) :
                     onClickListener.onClickDone(data)
                 }
 
+                locationDestination.setOnClickListener{
+                    onClickListener.onClickMap(data)
+                }
+
                 when (priority) {
                     "HIGH" -> {
                         labelPriority.setImageResource(R.drawable.label_high_priority)

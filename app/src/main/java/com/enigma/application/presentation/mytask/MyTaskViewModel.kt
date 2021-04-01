@@ -29,11 +29,18 @@ class MyTaskViewModel @Inject constructor(
     private var _unAssignTask = MutableLiveData<DataItem>()
     private var _activityId = MutableLiveData<String>()
     private var _locationGps = MutableLiveData<Location>()
+    private var _locationMap = MutableLiveData<DataItem>()
 
     val activityId: LiveData<String>
         get() {
             return _activityId
         }
+
+    val getLocationMap: LiveData<DataItem>
+        get() {
+            return _locationMap
+        }
+
 
     val getLocation: LiveData<Location>
         get() {
@@ -163,6 +170,7 @@ class MyTaskViewModel @Inject constructor(
         }
     }
 
+
     fun setLocationGps(location: Location) {
         _locationGps.postValue(location)
     }
@@ -186,6 +194,10 @@ class MyTaskViewModel @Inject constructor(
 
     override fun onClickDetail(data: DataItem) {
         TODO("Not yet implemented")
+    }
+
+    override fun onClickMap(data: DataItem) {
+        _locationMap.postValue(data)
     }
 
     override fun onClickDone(data: DataItem) {

@@ -2,11 +2,13 @@ package com.enigma.application.presentation.mytask
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.location.Location
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -267,6 +269,15 @@ class MyTaskFragment : Fragment() {
             }
 
         }
+
+        //Get Map Location Nav
+        viewModel.getLocationMap.observe(requireActivity()) {
+            val gmmIntentUri =
+                Uri.parse("google.navigation:q=" + it.destination?.lat + "," + it.destination?.lon + "&mode=l")
+            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+            mapIntent.setPackage("com.google.android.apps.maps")
+            startActivity(mapIntent)
+        }
     }
 
     private fun subscribeButton() {
@@ -349,7 +360,11 @@ class MyTaskFragment : Fragment() {
                     button_positive.setBackgroundColor(resources.getColor(R.color.hintColor))
 
                     viewModel.getLocation.observe(requireActivity()) {
-                        if (it.distanceTo(destination) < sharedPref.getInt(Constants.MIN_RADIUS, 100)) {
+                        if (it.distanceTo(destination) < sharedPref.getInt(
+                                Constants.MIN_RADIUS,
+                                100
+                            )
+                        ) {
                             button_positive.isEnabled = true
                             button_positive.text = it.distanceTo(destination).toString()
                             button_positive.backgroundTintList =
@@ -606,7 +621,7 @@ class MyTaskFragment : Fragment() {
     protected fun isLocationEnabled(): Boolean {
         locationManager =
             (requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager)!!
-        if(!locationManager!!.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+        if (!locationManager!!.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
             alertDialog.hide()
 
 

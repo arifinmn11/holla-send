@@ -54,15 +54,32 @@
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent">
 
-                <TextView
-                    android:id="@+id/tvReceiver"
-                    style="@style/TextView.PoppinsNormal16spBlack"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginRight="35dp"
-                    android:text="KCP KANTOR" />
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvReceiver"
+                        style="@style/TextView.PoppinsNormal16spBlack"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="KCP KANTOR" />
+
+                    <ImageView
+                        android:id="@+id/location_destination"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/hintColor"
+                        android:src="@drawable/ic_baseline_location_searching_24" />
+
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -87,6 +104,7 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="10dp"
                         android:text="Location" />
+
                 </LinearLayout>
 
 
