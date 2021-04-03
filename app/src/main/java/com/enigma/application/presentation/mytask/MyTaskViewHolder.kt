@@ -20,7 +20,6 @@ class MyTaskViewHolder(view: View, val onClickListener: MyTaskOnClickListener) :
                 buttonDoneTask.setOnClickListener {
                     onClickListener.onClickDone(data)
                 }
-
                 locationDestination.setOnClickListener{
                     onClickListener.onClickMap(data)
                 }
